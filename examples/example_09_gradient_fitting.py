@@ -49,7 +49,7 @@ print('Initial Trial\n{0}'.format(ev.model.parameters))
 # Find the best-fit parameters
 initial_guess = [t_0, u_0, t_E]
 result = op.minimize(
-    chi2_fun, method=sfit_minimize.minimize, x0=initial_guess,
+    partials_fun, method=sfit_minimize.minimize, x0=initial_guess,
     args=(ev, parameters_to_fit),
     jac=jacobian, tol=1e-3, options={'step': 'adaptive'})
 (fit_t_0, fit_u_0, fit_t_E) = result.x

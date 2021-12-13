@@ -1,32 +1,44 @@
-import sfit_minimize
-import LinearFunction
-import scipy.optimize as op
+import sfit_minimizer.sfit_minimize as sfit_minimize
 import matplotlib.pyplot as plt
+import numpy as np
 
-def chi2_fun(theta, my_func):
-    """
-    for given event set attributes from parameters_to_fit (list of
-    str) to values from theta list
-    """
-    my_func.theta = theta
-    my_func.reset_all()
 
-    return event.get_chi2()
+class LinearFunction(sfit_minimize.SFitFunction):
 
-def partials_fun(theta, my_func):
-    # Is this enough? How does minimize access the rest of the information 
-    # from my_func? e.g., res
-    my_func.theta = theta
-    return my_func.df
+    def __init__(self, data=None, theta=None):
+        self.data = data
+        self.theta = theta
+        self.reset_all()
+
+    def calc_model(self):
+        """Calculate expected values of the model"""
+        ymod = []
+        for i in range(len(self.theta)):
+            ymod.append(self.theta[i] * self.data[:, 0] ** i)
+
+        ymod = np.array(ymod)
+        self._ymod = np.sum(ymod, axis=0)
+
+    def calc_df(self):
+        """Calculate the derivatives of the fitting function and store as 
+        self.df."""
+        df = []
+        for i in range(len(self.theta)):
+            df.append(self.data[:, 0] ** i)
+
+        self._df = np.array(df)
+
 
 data = np.loadtxt('../data/test_data_10000pts_Poisson.txt', skiprows=2)
-initial_guess = [] # Wrong initial condition
-my_func = LinearFunction(data=data, theta=theta)
+initial_guess = [4, 2.1] # Wrong initial condition
+my_func = LinearFunction(data=data)
 
-result = op.minimize(
-    chi2_fun, method=sfit_minimize.minimize, x0=initial_guess,
-    args=(ev, parameters_to_fit),
-    partials_fun=partials_fun, tol=1e-3, options={'step': 'adaptive'})
+result = sfit_minimize.minimize(
+    my_func, x0=initial_guess, tol=1e-3, 
+    options={'step': 'adaptive'}, verbose=True)
+
+print('Full Results:')
+print(result)
 
 values = result.x
 sigmas = result.sigmas
@@ -45,7 +57,7 @@ plt.errorbar(
     my_func.data[:, 0], my_func.data[:, 1], 
     yerr=my_func.data[:, 2], fmt='o')
 x = np.arange(0, 100)
-plt.plot(x, theta_new[0] + theta_new[1] * x, color='red', zorder=5)
+plt.plot(x, values[0] + values[1] * x, color='red', zorder=5)
 
 plt.figure()
 plt.title('Residuals')

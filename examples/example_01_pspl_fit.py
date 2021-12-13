@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 
 class PSPLFunction(sfit_minimize.SFitFunction):
 
-    def __init__(self, event):
+    def __init__(self, event, parameters_to_fit):
         self.event = event
+        self.parameters_to_fit
         flattened_data = self.flatten_data()
         print(np.array(flattened_data).shape)
         sfit_minimize.SFitFunction.__init__(data=flattened_data, theta=theta)
@@ -23,6 +24,12 @@ class PSPLFunction(sfit_minimize.SFitFunction):
         print(np.array(flattened_data).shape)
 
         return np.flatten(flattened_data, axis=0)
+
+    def update_all(self, theta0):
+        for (key, val) in enumerate(self.parameters_to_fit):
+            setattr(event.model.parameters, val, theta0[key])
+
+        sfit_minimize.SFitFunction.update_all(theta0)
 
     def calc_res(self):
         """Calculate expected values of the residuals"""
@@ -48,11 +55,12 @@ class PSPLFunction(sfit_minimize.SFitFunction):
         print(self.df.shape)
 
 
+parameters_to_fit = ['t_0', 'u_0', 't_E']
 initial_guess = [] # Wrong initial condition
-my_func = PSPLFunction(event)
+my_func = PSPLFunction(event, parameters_to_fit)
 
 result = sfit_minimize.minimize(
-    my_func, x0=initial_guess, args=(parameters_to_fit), tol=1e-3, 
+    my_func, x0=initial_guess, tol=1e-3, 
     options={'step': 'adaptive'})
 
 print('Full Results:')

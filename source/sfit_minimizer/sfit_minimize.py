@@ -1,148 +1,396 @@
-from scipy.optimize import optimize
 import numpy as np
+### NEEDS DOCUMENTATION!!!! ###
 
-def minimize(fun, x0, args=(), jac=None, hess=None,
-             hessp=None, bounds=None, constraints=(), tol=None,
-             callback=None, options=None, maxiter=None, **unknown_options):
-    #
-    # Probably do not need: hess, hessp, bounds, constraints, callback
-    #
+def _set_step_size(options):
+    default = 0.1
 
-    """Minimization of scalar function of one or more variables.
-    Parameters
-    ----------
-    fun : callable
-        The objective function to be minimized.
-            ``fun(x, *args) -> float``
-        where ``x`` is an 1-D array with shape (n,) and ``args``
-        is a tuple of the fixed parameters needed to completely
-        specify the function.
-    x0 : ndarray, shape (n,)
-        Initial guess. Array of real elements of size (n,),
-        where 'n' is the number of independent variables.
-    args : tuple, optional
-        Extra arguments passed to the objective function and its
-        derivatives (`fun`, `jac` and `hess` functions).
-    jac : {callable,  '2-point', '3-point', 'cs', bool}, optional
-        Method for computing the gradient vector. Only for CG, BFGS,
-        Newton-CG, L-BFGS-B, TNC, SLSQP, dogleg, trust-ncg, trust-krylov,
-        trust-exact and trust-constr.
-        If it is a callable, it should be a function that returns the gradient
-        vector:
-            ``jac(x, *args) -> array_like, shape (n,)``
-        where ``x`` is an array with shape (n,) and ``args`` is a tuple with
-        the fixed parameters. If `jac` is a Boolean and is True, `fun` is
-        assumed to return a tuple ``(f, g)`` containing the objective
-        function and the gradient.
-        Methods 'Newton-CG', 'trust-ncg', 'dogleg', 'trust-exact', and
-        'trust-krylov' require that either a callable be supplied, or that
-        `fun` return the objective and gradient.
-        If None or False, the gradient will be estimated using 2-point finite
-        difference estimation with an absolute step size.
-        Alternatively, the keywords  {'2-point', '3-point', 'cs'} can be used
-        to select a finite difference scheme for numerical estimation of the
-        gradient with a relative step size. These finite difference schemes
-        obey any specified `bounds`.
-    hess : {callable, '2-point', '3-point', 'cs', HessianUpdateStrategy}, optional
-        Method for computing the Hessian matrix. Only for Newton-CG, dogleg,
-        trust-ncg, trust-krylov, trust-exact and trust-constr. If it is
-        callable, it should return the Hessian matrix:
-            ``hess(x, *args) -> {LinearOperator, spmatrix, array}, (n, n)``
-        where x is a (n,) ndarray and `args` is a tuple with the fixed
-        parameters. LinearOperator and sparse matrix returns are only allowed
-        for 'trust-constr' method. Alternatively, the keywords
-        {'2-point', '3-point', 'cs'} select a finite difference scheme
-        for numerical estimation. Or, objects implementing the
-        `HessianUpdateStrategy` interface can be used to approximate
-        the Hessian. Available quasi-Newton methods implementing
-        this interface are:
-            - `BFGS`;
-            - `SR1`.
-        Whenever the gradient is estimated via finite-differences,
-        the Hessian cannot be estimated with options
-        {'2-point', '3-point', 'cs'} and needs to be
-        estimated using one of the quasi-Newton strategies.
-        'trust-exact' cannot use a finite-difference scheme, and must be used
-        with a callable returning an (n, n) array.
-    hessp : callable, optional
-        Hessian of objective function times an arbitrary vector p. Only for
-        Newton-CG, trust-ncg, trust-krylov, trust-constr.
-        Only one of `hessp` or `hess` needs to be given.  If `hess` is
-        provided, then `hessp` will be ignored.  `hessp` must compute the
-        Hessian times an arbitrary vector:
-            ``hessp(x, p, *args) ->  ndarray shape (n,)``
-        where x is a (n,) ndarray, p is an arbitrary vector with
-        dimension (n,) and `args` is a tuple with the fixed
-        parameters.
-    bounds : sequence or `Bounds`, optional
-        Bounds on variables for Nelder-Mead, L-BFGS-B, TNC, SLSQP, Powell, and
-        trust-constr methods. There are two ways to specify the bounds:
-            1. Instance of `Bounds` class.
-            2. Sequence of ``(min, max)`` pairs for each element in `x`. None
-               is used to specify no bound.
-    constraints : {Constraint, dict} or List of {Constraint, dict}, optional
-        Constraints definition (only for COBYLA, SLSQP and trust-constr).
-        Constraints for 'trust-constr' are defined as a single object or a
-        list of objects specifying constraints to the optimization problem.
-        Available constraints are:
-            - `LinearConstraint`
-            - `NonlinearConstraint`
-        Constraints for COBYLA, SLSQP are defined as a list of dictionaries.
-        Each dictionary with fields:
-            type : str
-                Constraint type: 'eq' for equality, 'ineq' for inequality.
-            fun : callable
-                The function defining the constraint.
-            jac : callable, optional
-                The Jacobian of `fun` (only for SLSQP).
-            args : sequence, optional
-                Extra arguments to be passed to the function and Jacobian.
-        Equality constraint means that the constraint function result is to
-        be zero whereas inequality means that it is to be non-negative.
-        Note that COBYLA only supports inequality constraints.
-    tol : float, optional
-        Tolerance for termination. When `tol` is specified, the selected
-        minimization algorithm sets some relevant solver-specific tolerance(s)
-        equal to `tol`. For detailed control, use solver-specific
-        options.
-    options : dict, optional
-        A dictionary of solver options. All methods accept the following
-        generic options:
-            maxiter : int
-                Maximum number of iterations to perform. Depending on the
-                method each iteration may use several function evaluations.
-            disp : bool
-                Set to True to print convergence messages.
-        For method-specific options, see :func:`show_options()`.
-    callback : callable, optional
-        Called after each iteration. For 'trust-constr' it is a callable with
-        the signature:
-            ``callback(xk, OptimizeResult state) -> bool``
-        where ``xk`` is the current parameter vector. and ``state``
-        is an `OptimizeResult` object, with the same fields
-        as the ones from the return. If callback returns True
-        the algorithm execution is terminated.
-        For all the other methods, the signature is:
-            ``callback(xk)``
-        where ``xk`` is the current parameter vector.
-    Returns
-    -------
-    res : OptimizeResult
-        The optimization result represented as a ``OptimizeResult`` object.
-        Important attributes are: ``x`` the solution array, ``success`` a
-        Boolean flag indicating if the optimizer exited successfully and
-        ``message`` which describes the cause of the termination. See
-        `OptimizeResult` for a description of other attributes.
-    """
+    if options is None:
+        options = {'step': default}
 
-    optimize._check_unknown_options(unknown_options)
+    if 'step' in options.keys():
+        if isinstance(options['step'], (str)):
+            if options['step'].lower() == 'adaptive':
+                fac = 0.01
+            else:
+                raise ValueError(
+                    'Invalid option for "step": {0}'.format(options['step']))
 
-    x0 = np.asarray(x0).flatten()
-    if maxiter is None:
-        maxiter = len(x0) * 200
+        else:
+            fac = options['step']
 
-    # Need to figure out how this varies for different algorithms.
-    sf = optimize._prepare_scalar_function(
-        fun, x0, jac=jac, args=args, epsilon=eps,
-        finite_diff_rel_step=finite_diff_rel_step)
-    pass
+    else:
+        fac = default
+
+    return fac
+
+def minimize(
+        func, x0=None, args=None, tol=1e-3, options=None, max_iter=1000,
+        verbose=False):
+    
+    fac = _set_step_size(options)
+
+    func.update_all(x0)
+    old_chi2 = func.chi2
+    x_old = x0
+    for i in range(max_iter):
+        x_new = x_old + fac * func.step
+        func.update_all(x_new)
+
+        if verbose:
+            print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}'.format(
+                old_chi2, func.chi2, func.step, fac, x_old, x_new, i))
+
+        try:
+            if options['step'] == 'adaptive':
+                if old_chi2 - func.chi2 < 1.0:
+                    fac = 0.1
+
+            if old_chi2 - func.chi2 < tol:
+                if verbose:
+                    print('tolerance reached!')
+
+                break
+            elif old_chi2 < func.chi2:
+                raise ValueError(
+                    'New chi2 worse than old chi2.\n' +
+                    'Previous step: {0}, {1}\n'.format(old_chi2, x_old) +
+                    'New step: {0}, {1}\n'.format(func.chi2, x_nwe))
+            else:
+                old_chi2 = func.chi2
+                x_old = x_new
+
+                
+        except ValueError as msg:
+            func.update_all(x_old)
+            return SFitResults(
+                func, success=False, msg=msg)
+
+    func.update_all(x_new)
+    if i < max_iter - 1:
+        return SFitResults(func, success=True)
+    else:
+        return SFitResults(
+            func, success=False, 
+            msg='max iterations exceeded: {0}'.format(max_iter))
+
+
+class SFitResults():
+
+    def __init__(self, func, success=None, msg=None):
+        self.x = func.theta
+        self.sigmas = func.get_sigmas()
+        self.success = success
+        self.msg = msg
+
+    def __repr__(self):
+        output_str = 'x = {0}\n'.format(self.x)
+        output_str += 'sigmas = {0}\n'.format(self.sigmas)
+        output_str += 'success = {0}\n'.format(self.success)
+        output_str += 'msg = {0}'.format(self.msg)
+        return output_str
+
+
+class SFitFunction(object):
+
+    def __init__(self, data=None, theta=None):
+        self.data = data
+        self.theta = theta
+        self.reset_all()
+
+    def reset_all(self):
+        self._ymod = None
+        self._res = None
+        self._chi2 = None
+        self._df = None
+        self._dchi2 = None
+        #self._chi2_gradient = None
+        self._dvec = None
+        self._bmat = None
+        self._cmat = None
+        self._sigmas = None
+        self._step = None
+
+    def update_all(self, theta0=None):
+        """
+        For a new set of model parameters theta0, recalculate all of the
+        data properties with respect to the new model.
+
+        :param theta0:
+        :return:
+        """
+        if theta0 is not None:
+            self.reset_all()
+            self.theta = theta0
+
+        self.calc_model()
+        self.calc_res()
+        self.calc_chi2()
+        self.calc_df()
+        self.calc_dchi2()
+        self.calc_dvec()
+        self.calc_bmat()
+        self.calc_cmat()
+        self.calc_step()
+
+    # Calculation functions
+    def calc_model(self):
+        """
+        FUNCTION SPECIFIC: Calculate expected values of the model. May
+        be explicitly defined for a specific class that inherits
+        SFitFunction.
+        """
+        pass
+
+    def calc_res(self):
+        """
+        Residuals between the data and the model. Either this or
+        calc_model() should be explicitly definined for a specific
+        class that inherits SFitFunction.
+        """
+        if self.ymod is None:
+            self.calc_model()
+
+        self._res = self.ymod - self.data[:, 1]
+
+    def calc_chi2(self):
+        if self.res is None:
+            self.calc_res()
+
+        self._chi2 = np.sum(self.res ** 2 / self.data[:, 2] ** 2)
+
+    def calc_df(self):
+        """
+        FUNCTION SPECIFIC: Calculate the derivatives of the fitting
+        function relative to each parameter theta and store as
+        self.df.  Should be explicitly defined for a specific class
+        that inherits SFitFunction.
+        """
+        pass
+
+    def calc_dchi2(self):
+        """Calculate the gradient of chi2 at each datapoint"""
+        if self.df is None:
+            self.calc_df()
+
+        if self.res is None:
+            self.calc_res()
+
+        chi2_gradient = []
+        for i in range(len(self.theta)):
+            chi2_gradient.append(
+                -2 * self.res * self.df[i] / self.data[:, 2]**2)
+
+        self._dchi2 = np.array(chi2_gradient)
+        #print(
+        #    'calc_dchi2(): shape of dchi2 (expect len(theta) x N)',
+        #    self.dchi2.shape)
+
+    #def calc_chi2_gradient(self):
+    #    """Calculate the gradient of chi2 summed over ALL datapoints"""
+    #    if self.dchi2 is None:
+    #        self.calc_dchi2()
+
+    #    self._chi2_gradient = np.sum(self.dchi2, axis=1)
+        #print(
+        #    'calc_chi2_gradient(): shape of chi2_gradient, expect len(theta)',
+        #    self.chi2_gradient.shape)
+
+    def calc_dvec(self):
+        """
+        Calculate the d vector and store it as self.dvec.
+        d_i = d_i + (partial chi2/partial a_i)/2
+        """
+        if self.dchi2 is None:
+            self.calc_dchi2()
+
+        self._dvec = np.sum(self.dchi2, axis=1) / 2.
+        #print('calc_dvec(): shape of dvec, expect len(theta)', self.dvec.shape)
+
+    def calc_bmat(self):
+        """
+        Calculate the b matrix and store it as self.bmat.
+        b_ij = b_ij + (partial F/partial a_i)(partial F/partial a_j)/error^2
+        """
+        if self.df is None:
+            self.calc_df()
+
+        self._bmat = np.zeros((len(self.theta), len(self.theta)))
+        for i in range(len(self.theta)):
+            for j in range(len(self.theta)):
+                self._bmat[i, j] = np.sum(
+                    self.df[i] * self.df[j] / self.data[:, 2]**2)
+
+    def calc_cmat(self):
+        """Invert the b matrix to find the c matrix."""
+        if self.bmat is None:
+            self.calc_bmat()
+
+        self._cmat = np.linalg.inv(self.bmat)
+
+    def calc_step(self):
+        """
+        Calculate the full proposed step size.
+        Delta a_i = sum_j c_ij * d_j.
+        """
+        if self.cmat is None:
+            self.calc_cmat()
+
+        if self.dvec is None:
+            self.calc_dvec()
+
+        self._step = np.zeros(len(self.theta))
+        for i in range(len(self.theta)):
+            for j in range(len(self.theta)):
+                self._step[i] += self.cmat[i, j] * self.dvec[j]
+
+    def calc_sigmas(self):
+        """
+        Calculate the uncertainty in each parameter theta.
+        sigma_a_i = sqrt(c_ii)
+        """
+        if self.cmat is None:
+            self.calc_cmat()
+
+        self._sigmas = np.zeros(len(self.theta))
+        for i in range(len(self.theta)):
+            self._sigmas[i] = np.sqrt(self.cmat[i, i])
+
+    # Properties
+    @property
+    def theta(self):
+        return self._theta
+
+    @theta.setter
+    def theta(self, value):
+        self._theta = value
+
+    @property
+    def ymod(self):
+        """ model values for data[:, 0]. """
+        return self._ymod
+
+    @property
+    def res(self):
+        """ residuals of the model from the data data = y - ymod"""
+        return self._res
+
+    @res.setter
+    def res(self, value):
+        """ residuals of the model from the data data = y - ymod"""
+        self._res = value
+
+    @property
+    def chi2(self):
+        """ chi2 of the model with respect to the data"""
+        return self._chi2
+
+    @property
+    def df(self):
+        """numerical partial derivatives of the *fitted function F* with respect
+        to the parameters, calculated at each data point.
+        shape = (len(theta), len(data))"""
+        if self._df is None:
+            self.calc_df()
+
+        return self._df
+
+    @df.setter
+    def df(self, value):
+        """This and other setters need checks to make sure value is the right 
+        type. """
+
+        self._df = value
+
+    @property
+    def dchi2(self):
+        """numerical partial derivatives of the *chi2* with respect
+        to the parameters, calculated at each data point.
+        shape = (len(theta), len(data))"""
+        return self._dchi2
+
+    #@property
+    #def chi2_gradient(self):
+    #    """value of the chi2 gradient. shape = ( len(theta) ) """
+    #    return self._chi2_gradient
+
+    @property
+    def dvec(self):
+        """
+        d vector from sfit, used to calculate the step size.
+        shape = ( len(theta) )
+        """
+        return self._dvec
+
+    @property
+    def bmat(self):
+        """
+        b matrix from sfit. invert to find c matrix used for stepping and
+        finding sigmas.
+        shape = ( len(theta), len(theta) )
+        """
+        return self._bmat
+
+    @property
+    def cmat(self):
+        """c matrix from sfit. shape = ( len(theta), len(theta) )"""
+        return self._cmat
+
+    @property
+    def sigmas(self):
+        """Uncertainty in each parameter theta"""
+        return self._sigmas
+
+    @property
+    def step(self):
+        """Step for each parameter theta"""
+        return self._step
+
+    # Retrieval Functions
+    def get_chi2(self, theta):
+        """Calculate and return the chi2 of the data w.r.t. the model"""
+        self.calc_chi2()
+
+        return self.chi2
+
+
+    def get_partials(self, theta):
+        """Calculate and return the partial derivatives of the fitting function"""
+        self.calc_df()
+
+        return np.sum(self.df, axis=1)
+
+    #def get_chi2_gradient(self, theta):
+    #    """Calculate and return the derivative of the chi2 of a line."""
+    #    self.calc_chi2_gradient()
+
+    #    return np.sum(self.chi2_gradient, axis=1)
+
+    def get_dvec(self):
+        """Calculate and return the d vector"""
+        self.calc_dvec()
+
+        return self.dvec
+
+    def get_bmat(self):
+        """Calculate and return the b matrix"""
+        self.calc_bmat()
+
+        return self.bmat
+
+    def get_cmat(self):
+        """Calculate and return the c matrix"""
+        self.calc_cmat()
+
+        return self.cmat
+
+    def get_step(self):
+        """Calculate and return the full step for theta_new = theta_old + step."""
+        self.calc_step()
+
+        return self.step
+
+    def get_sigmas(self):
+        """Calculate and return the uncertainty in each parameter theta."""
+        self.calc_sigmas()
+
+        return self.sigmas

@@ -1,9 +1,9 @@
-import sfit_minimizer.sfit_minimize as sfit_minimize
+import sfit_minimizer
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-class LinearFunction(sfit_minimize.SFitFunction):
+class LinearFunction(sfit_minimizer.SFitFunction):
 
     def __init__(self, data=None, theta=None):
         self.data = data
@@ -33,7 +33,7 @@ data = np.loadtxt('../data/test_data_10000pts_Poisson.txt', skiprows=2)
 initial_guess = [4, 2.1] # Wrong initial condition
 my_func = LinearFunction(data=data)
 
-result = sfit_minimize.minimize(
+result = sfit_minimizer.minimize(
     my_func, x0=initial_guess, tol=1e-3, 
     options={'step': 'adaptive'}, verbose=True)
 

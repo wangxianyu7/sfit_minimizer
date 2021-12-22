@@ -37,12 +37,13 @@ result = sfit_minimizer.minimize(
     my_func, x0=initial_guess, tol=1e-3, 
     options={'step': 'adaptive'}, verbose=True)
 
-print('Full Results:')
+print('\nFull Results:')
 print(result)
+print('\n')
 
 values = result.x
 sigmas = result.sigmas
-print('results: ')
+print('fit values: ')
 print(values)
 print('+/-')
 print(sigmas)

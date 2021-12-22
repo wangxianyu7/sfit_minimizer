@@ -1,5 +1,4 @@
-import numpy as np
-from sfit_classes import SFitFunction, SFitResults
+from sfit_minimizer.sfit_classes import SFitResults
 
 def set_initial_step_size(options):
     """
@@ -74,12 +73,15 @@ def minimize(
     func.update_all(x0)
     old_chi2 = func.chi2
     x_old = x0
+    if verbose:
+        print('{6} {0:>16} {1:>16} {2} {3}\n{4}\n{5}\n'.format(
+                'old_chi2', 'new_chi2', '[step]', 'stepfrac', '[old params]', '[new params]', 'i'))
     for i in range(max_iter):
         x_new = x_old + fac * func.step
         func.update_all(x_new)
 
         if verbose:
-            print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}'.format(
+            print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
                 old_chi2, func.chi2, func.step, fac, x_old, x_new, i))
 
         try:

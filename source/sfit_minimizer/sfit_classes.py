@@ -1,3 +1,5 @@
+import numpy as np
+
 class SFitResults():
     """
     Results of the minimization algorithm. Modeled after scipy.optimize.OptimizeResult.

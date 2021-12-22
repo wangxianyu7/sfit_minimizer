@@ -9,7 +9,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         self.parameters_to_fit = parameters_to_fit
         flattened_data = self.flatten_data()
         print(np.array(flattened_data).shape)
-        sfit_minimizer.SFitFunction.__init__(data=flattened_data, theta=theta)
+        sfit_minimizer.SFitFunction.__init__(self, data=flattened_data, theta=theta)
 
     def flatten_data(self):
         """ Concatenate good points for all datasets into a single array with 
@@ -29,7 +29,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         for (key, val) in enumerate(self.parameters_to_fit):
             setattr(event.model.parameters, val, theta0[key])
 
-        sfit_minimizer.SFitFunction.update_all(theta0)
+        sfit_minimizer.SFitFunction.update_all(self, theta0)
 
     def calc_res(self):
         """Calculate expected values of the residuals"""

@@ -6,9 +6,7 @@ import numpy as np
 class LinearFunction(sfit_minimizer.SFitFunction):
 
     def __init__(self, data=None, theta=None):
-        self.data = data
-        self.theta = theta
-        self.reset_all()
+        sfit_minimizer.SFitFunction.__init__(self, data=data, theta=theta)
 
     def calc_model(self):
         """Calculate expected values of the model"""
@@ -30,7 +28,7 @@ class LinearFunction(sfit_minimizer.SFitFunction):
 
 
 data = np.loadtxt('../data/test_data_10000pts_Poisson.txt', skiprows=2)
-initial_guess = [4, 2.1] # Wrong initial condition
+initial_guess = [4, 2.1]  # Wrong initial condition
 my_func = LinearFunction(data=data)
 
 result = sfit_minimizer.minimize(

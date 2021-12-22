@@ -45,7 +45,7 @@ def minimize(
     Find the best-fit parameters for a function f using A. Gould's sfit algorithm.
 
     Arguments:
-        func: :py:class:`sfit.minimizer.sfit_classes.SFitFunction`
+        func: :py:class:`sfit_minimizer.sfit_classes.SFitFunction`
             The function whose parameters are being fit.
 
     Keywords:
@@ -65,7 +65,7 @@ def minimize(
             True = print mores stuff than usual.
 
     Returns:
-        :py:class:`sfit.minimizer.sfit_classes.SFitResults` object.
+        :py:class:`sfit_minimizer.sfit_classes.SFitResults` object.
 
     """
     

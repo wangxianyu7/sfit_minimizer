@@ -72,8 +72,9 @@ class SFitFunction(object):
     Main class for sfit minimization routine. Establishes all the necessary functions for executing the A. Gould
     algorithm. At a minimum, the user should specify:
 
-    EITHER :py:func:`~calc_model` OR :py:func:`~calc_res`
-    AND :py:func:`~calc_df`.
+      EITHER :py:func:`~calc_model` OR :py:func:`~calc_res`
+
+      AND :py:func:`~calc_df`.
 
     Arguments:
         data: *np.array* with shape (N, 3)

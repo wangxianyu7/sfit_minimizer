@@ -32,7 +32,7 @@ initial_guess = [4, 2.1]  # Wrong initial condition
 my_func = LinearFunction(data=data)
 
 result = sfit_minimizer.minimize(
-    my_func, x0=initial_guess, tol=1e-3, 
+    my_func, x0=initial_guess, tol=1e-7,
     options={'step': 'adaptive'}, verbose=True)
 
 print('\nFull Results:')

@@ -77,6 +77,8 @@ def minimize(
     if verbose:
         print('{6} {0:>16} {1:>16} {2} {3}\n{4}\n{5}\n'.format(
                 'old_chi2', 'new_chi2', '[step]', 'stepfrac', '[old params]', '[new params]', 'i'))
+        print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
+                old_chi2, func.chi2, func.step, fac, x_old, None, -1))
 
     for i in range(max_iter):
         x_new = x_old + fac * func.step

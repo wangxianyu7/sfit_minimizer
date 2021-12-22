@@ -1,5 +1,6 @@
 from sfit_minimizer.sfit_classes import SFitResults
 
+
 def set_initial_step_size(options):
     """
     Set the step size for the :py:func:`~minimize` function.
@@ -12,7 +13,7 @@ def set_initial_step_size(options):
 
     Returns:
         fac: *float*
-            The intial fraction of the step that will be added in each iteration of the :py:func:`~minimize` routine.
+            The initial fraction of the step that will be added in each iteration of the :py:func:`~minimize` routine.
     """
     default = 0.1
 
@@ -76,6 +77,7 @@ def minimize(
     if verbose:
         print('{6} {0:>16} {1:>16} {2} {3}\n{4}\n{5}\n'.format(
                 'old_chi2', 'new_chi2', '[step]', 'stepfrac', '[old params]', '[new params]', 'i'))
+
     for i in range(max_iter):
         x_new = x_old + fac * func.step
         func.update_all(x_new)
@@ -98,12 +100,11 @@ def minimize(
                 raise ValueError(
                     'New chi2 worse than old chi2.\n' +
                     'Previous step: {0}, {1}\n'.format(old_chi2, x_old) +
-                    'New step: {0}, {1}\n'.format(func.chi2, x_nwe))
+                    'New step: {0}, {1}\n'.format(func.chi2, x_new))
             else:
                 old_chi2 = func.chi2
                 x_old = x_new
 
-                
         except ValueError as msg:
             func.update_all(x_old)
             return SFitResults(
@@ -116,4 +117,3 @@ def minimize(
         return SFitResults(
             func, success=False, 
             msg='max iterations exceeded: {0}'.format(max_iter))
-

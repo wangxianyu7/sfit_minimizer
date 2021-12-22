@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class SFitResults():
     """
     Results of the minimization algorithm. Modeled after scipy.optimize.OptimizeResult.
@@ -68,7 +69,7 @@ class SFitResults():
 
 class SFitFunction(object):
     """
-    Main class for sfit minimization routine. Establishes all of the necessary functions for executing the A. Gould
+    Main class for sfit minimization routine. Establishes all the necessary functions for executing the A. Gould
     algorithm. At a minimum, the user should specify:
 
     EITHER :py:func:`~calc_model` OR :py:func:`~calc_res`
@@ -84,7 +85,7 @@ class SFitFunction(object):
     """
 
     def __init__(self, data=None, theta=None):
-        if isinstance(data, (np.ndarray)):
+        if isinstance(data, np.ndarray):
             self.data = data
         else:
             raise TypeError('data must be an np.array object with shape (N, 3)')
@@ -98,7 +99,6 @@ class SFitFunction(object):
         self._chi2 = None
         self._df = None
         self._dchi2 = None
-        #self._chi2_gradient = None
         self._dvec = None
         self._bmat = None
         self._cmat = None
@@ -188,7 +188,6 @@ class SFitFunction(object):
 
         self._dchi2 = np.array(chi2_gradient)
 
-
     def calc_dvec(self):
         """
         Calculate the d vector and store it as self.dvec.
@@ -198,7 +197,6 @@ class SFitFunction(object):
             self.calc_dchi2()
 
         self._dvec = np.sum(self.dchi2, axis=1) / 2.
-
 
     def calc_bmat(self):
         """
@@ -280,7 +278,7 @@ class SFitFunction(object):
 
     @ymod.setter
     def ymod(self, value):
-        if isinstance(value, (np.ndarray)):
+        if isinstance(value, np.ndarray):
             self._ymod = value
         else:
             raise TypeError('ymod must be an np.array object. Type: ', type(value))
@@ -290,13 +288,13 @@ class SFitFunction(object):
         """
         *np.array* of shape (N)
 
-        residuals of the model from the data data = y - ymod
+        residuals of the model from the data: res = y - ymod
         """
         return self._res
 
     @res.setter
     def res(self, value):
-        if isinstance(value, (np.ndarray)):
+        if isinstance(value, np.ndarray):
             self._res = value
         else:
             raise TypeError('res must be an np.array object. Type: ', type(value))
@@ -321,7 +319,7 @@ class SFitFunction(object):
 
     @df.setter
     def df(self, value):
-        if isinstance(value, (np.ndarray)):
+        if isinstance(value, np.ndarray):
             self._df = value
         else:
             raise TypeError('df must be an np.array object. Type: ', type(value))
@@ -366,14 +364,13 @@ class SFitFunction(object):
         return self._step
 
     # Retrieval Functions
-    def get_chi2(self, theta):
+    def get_chi2(self):
         """Calculate and return the chi2 of the data w.r.t. the model"""
         self.calc_chi2()
 
         return self.chi2
 
-
-    def get_partials(self, theta):
+    def get_partials(self):
         """Calculate and return the partial derivatives of the fitting function"""
         self.calc_df()
 

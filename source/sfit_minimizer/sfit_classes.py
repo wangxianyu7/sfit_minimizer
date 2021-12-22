@@ -87,9 +87,17 @@ class SFitFunction(object):
 
     def __init__(self, data=None, theta=None):
         if isinstance(data, np.ndarray):
-            self.data = data
+            if data.shape[1] == 3:
+                self.data = data
+            else:
+                raise ValueError('data must have shape (N, 3). Shape: {0}'.format(data.shape))
+
         else:
-            raise TypeError('data must be an np.array object with shape (N, 3)')
+            raise TypeError(
+                'data must be an np.array object with shape (N, 3). Type: {0}'.format(type(data))
+            )
+
+        print('data checker implemented')
 
         self.theta = theta
         self.reset_all()
@@ -266,7 +274,9 @@ class SFitFunction(object):
             if isinstance(value, (list, np.ndarray)):
                 self._theta = value
             else:
-                raise TypeError('theta must be either list or np.array. Type: ', type(value))
+                raise TypeError(
+                    'theta must be either list or np.array. Type: {0}'.format(type(value))
+                )
 
     @property
     def ymod(self):
@@ -280,9 +290,15 @@ class SFitFunction(object):
     @ymod.setter
     def ymod(self, value):
         if isinstance(value, np.ndarray):
-            self._ymod = value
+            if len(value) == len(self.data):
+                self._ymod = value
+            else:
+                raise ValueError(
+                    'ymod should have the same length as data. data.shape: {0}, ymod.shape: {1}'.format(
+                        self.data.shape, value.shape))
+
         else:
-            raise TypeError('ymod must be an np.array object. Type: ', type(value))
+            raise TypeError('ymod must be an np.array object. Type: {0}'.format(type(value)))
 
     @property
     def res(self):
@@ -296,9 +312,14 @@ class SFitFunction(object):
     @res.setter
     def res(self, value):
         if isinstance(value, np.ndarray):
-            self._res = value
+            if len(value) == len(self.data):
+                self._res = value
+            else:
+                raise ValueError(
+                    'res should have the same length as data. data.shape: {0}, res.shape: {1}'.format(
+                        self.data.shape, value.shape))
         else:
-            raise TypeError('res must be an np.array object. Type: ', type(value))
+            raise TypeError('res must be an np.array object. Type: {0}'.format(type(value)))
 
     @property
     def chi2(self):
@@ -321,9 +342,15 @@ class SFitFunction(object):
     @df.setter
     def df(self, value):
         if isinstance(value, np.ndarray):
-            self._df = value
+            if value.shape == (len(self.theta), len(self.data)):
+                self._df = value
+            else:
+                raise ValueError(
+                    'df should have the shape (M, N) where M is the number of parameters and N is the number of data' +
+                    ' points. len(theta): {2}, data.shape: {0}, df.shape: {1}'.format(
+                        self.data.shape, value.shape, len(self.theta)))
         else:
-            raise TypeError('df must be an np.array object. Type: ', type(value))
+            raise TypeError('df must be an np.array object. Type: {0}'.format(type(value)))
 
     @property
     def dchi2(self):

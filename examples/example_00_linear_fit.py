@@ -17,7 +17,7 @@ class LinearFunction(sfit_minimizer.SFitFunction):
             ymod.append(self.theta[i] * self.data[:, 0] ** i)
 
         ymod = np.array(ymod)
-        self._ymod = np.sum(ymod, axis=0)
+        self.ymod = np.sum(ymod, axis=0)
 
     def calc_df(self):
         """Calculate the derivatives of the fitting function and store as 
@@ -26,7 +26,7 @@ class LinearFunction(sfit_minimizer.SFitFunction):
         for i in range(len(self.theta)):
             df.append(self.data[:, 0] ** i)
 
-        self._df = np.array(df)
+        self.df = np.array(df)
 
 
 data = np.loadtxt('../data/test_data_10000pts_Poisson.txt', skiprows=2)

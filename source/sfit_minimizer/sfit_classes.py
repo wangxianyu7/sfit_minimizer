@@ -84,7 +84,11 @@ class SFitFunction(object):
     """
 
     def __init__(self, data=None, theta=None):
-        self.data = data
+        if isinstance(data, (np.ndarray)):
+            self.data = data
+        else:
+            raise TypeError('data must be an np.array object with shape (N, 3)')
+
         self.theta = theta
         self.reset_all()
 
@@ -127,7 +131,7 @@ class SFitFunction(object):
         be explicitly defined for a specific class that inherits
         SFitFunction.
 
-        Returns:
+        sets self.ymod =
             *np.array* of shape (N), where each element k is the value of the model evaluated at data[k, 0].
 
         """
@@ -139,14 +143,14 @@ class SFitFunction(object):
         calc_model() should be explicitly defined for a specific
         class that inherits SFitFunction.
 
-        Returns:
+        sets self.res =
             *np.array* of shape (N), where each element k = model[k] - data[k, 1].
 
         """
         if self.ymod is None:
             self.calc_model()
 
-        self._res = self.ymod - self.data[:, 1]
+        self.res = self.ymod - self.data[:, 1]
 
     def calc_chi2(self):
         if self.res is None:
@@ -161,8 +165,8 @@ class SFitFunction(object):
         self.df.  Should be explicitly defined for a specific class
         that inherits SFitFunction.
 
-        Returns:
-            *np.array* of shape (N, M) where df[k, i] returns the derivative of the fitting function with respect to
+        sets self.df =
+            *np.array* of shape (M, N) where df[i, k] returns the derivative of the fitting function with respect to
             parameter i evaluated at point k.
 
         """
@@ -183,19 +187,7 @@ class SFitFunction(object):
                 -2 * self.res * self.df[i] / self.data[:, 2]**2)
 
         self._dchi2 = np.array(chi2_gradient)
-        #print(
-        #    'calc_dchi2(): shape of dchi2 (expect len(theta) x N)',
-        #    self.dchi2.shape)
 
-    #def calc_chi2_gradient(self):
-    #    """Calculate the gradient of chi2 summed over ALL datapoints"""
-    #    if self.dchi2 is None:
-    #        self.calc_dchi2()
-
-    #    self._chi2_gradient = np.sum(self.dchi2, axis=1)
-        #print(
-        #    'calc_chi2_gradient(): shape of chi2_gradient, expect len(theta)',
-        #    self.chi2_gradient.shape)
 
     def calc_dvec(self):
         """
@@ -206,7 +198,7 @@ class SFitFunction(object):
             self.calc_dchi2()
 
         self._dvec = np.sum(self.dchi2, axis=1) / 2.
-        #print('calc_dvec(): shape of dvec, expect len(theta)', self.dvec.shape)
+
 
     def calc_bmat(self):
         """
@@ -260,27 +252,54 @@ class SFitFunction(object):
     # Properties
     @property
     def theta(self):
-        """ Parameters of the function being fit to the data."""
+        """
+        *list* or *np.array*
+
+        Parameters of the function being fit to the data.
+        """
         return self._theta
 
     @theta.setter
     def theta(self, value):
-        self._theta = value
+        if value is None:
+            self._theta = value
+        else:
+            if isinstance(value, (list, np.ndarray)):
+                self._theta = value
+            else:
+                raise TypeError('theta must be either list or np.array. Type: ', type(value))
 
     @property
     def ymod(self):
-        """ model values for data[:, 0]. """
+        """
+        *np.array* of shape (N)
+
+        model values for data[:, 0].
+        """
         return self._ymod
+
+    @ymod.setter
+    def ymod(self, value):
+        if isinstance(value, (np.ndarray)):
+            self._ymod = value
+        else:
+            raise TypeError('ymod must be an np.array object. Type: ', type(value))
 
     @property
     def res(self):
-        """ residuals of the model from the data data = y - ymod"""
+        """
+        *np.array* of shape (N)
+
+        residuals of the model from the data data = y - ymod
+        """
         return self._res
 
     @res.setter
     def res(self, value):
-        """ residuals of the model from the data data = y - ymod"""
-        self._res = value
+        if isinstance(value, (np.ndarray)):
+            self._res = value
+        else:
+            raise TypeError('res must be an np.array object. Type: ', type(value))
 
     @property
     def chi2(self):
@@ -289,7 +308,10 @@ class SFitFunction(object):
 
     @property
     def df(self):
-        """numerical partial derivatives of the *fitted function F* with respect
+        """
+        *np.array* of shape (M, N)
+
+        numerical partial derivatives of the *fitted function F* with respect
         to the parameters, calculated at each data point.
         shape = (len(theta), len(data))"""
         if self._df is None:
@@ -299,10 +321,10 @@ class SFitFunction(object):
 
     @df.setter
     def df(self, value):
-        """This and other setters need checks to make sure value is the right
-        type. """
-
-        self._df = value
+        if isinstance(value, (np.ndarray)):
+            self._df = value
+        else:
+            raise TypeError('df must be an np.array object. Type: ', type(value))
 
     @property
     def dchi2(self):
@@ -310,11 +332,6 @@ class SFitFunction(object):
         to the parameters, calculated at each data point.
         shape = (len(theta), len(data))"""
         return self._dchi2
-
-    #@property
-    #def chi2_gradient(self):
-    #    """value of the chi2 gradient. shape = ( len(theta) ) """
-    #    return self._chi2_gradient
 
     @property
     def dvec(self):
@@ -361,12 +378,6 @@ class SFitFunction(object):
         self.calc_df()
 
         return np.sum(self.df, axis=1)
-
-    #def get_chi2_gradient(self, theta):
-    #    """Calculate and return the derivative of the chi2 of a line."""
-    #    self.calc_chi2_gradient()
-
-    #    return np.sum(self.chi2_gradient, axis=1)
 
     def get_dvec(self):
         """Calculate and return the d vector"""

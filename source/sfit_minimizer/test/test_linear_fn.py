@@ -39,7 +39,7 @@ def test_perfect_chi2():
     my_func.calc_chi2()
 
     tol = 1e-6
-    assert np.sum(my_func.res) < tol
+    assert np.sum(my_func.residuals) < tol
     assert my_func.chi2 < tol
 
 
@@ -65,7 +65,7 @@ def test_fit():
     y = data[:, 0] * theta[1] + theta[0]
     res = y - data[:, 1]
     np.testing.assert_almost_equal(my_func.ymod, y)
-    np.testing.assert_almost_equal(my_func.res, res)
+    np.testing.assert_almost_equal(my_func.residuals, res)
 
     # Check b, c, d matrices
     b = np.zeros((2, 2))

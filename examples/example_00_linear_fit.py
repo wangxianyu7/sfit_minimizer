@@ -61,7 +61,7 @@ plt.plot(x, values[0] + values[1] * x, color='red', zorder=5)
 plt.figure()
 plt.title('Residuals')
 plt.errorbar(
-    my_func.data[:, 0], my_func.res, 
+    my_func.data[:, 0], my_func.residuals,
     yerr=my_func.data[:, 2], fmt='o')
 plt.axhline(0, color='red', zorder=5)
 

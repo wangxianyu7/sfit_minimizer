@@ -90,17 +90,17 @@ class TestResType(TestType4SFit):
 
     def test_res_1(self):
         # works correctly
-        self.func.res = np.arange(0, self.n)
+        self.func.residuals = np.arange(0, self.n)
 
     def test_res_2(self):
         # wrong type
         with self.assertRaises(TypeError):
-            self.func.res = range(0, self.n)
+            self.func.residuals = range(0, self.n)
 
     def test_res_3(self):
         # wrong size
         with self.assertRaises(ValueError):
-            self.func.res = np.arange(0, self.n+1)
+            self.func.residuals = np.arange(0, self.n+1)
 
 
 # df: type, dimensions

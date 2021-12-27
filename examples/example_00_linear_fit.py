@@ -2,6 +2,9 @@ import sfit_minimizer
 import matplotlib.pyplot as plt
 import numpy as np
 
+"""
+Example of fitting a polynomial of the form y = m * x + b to some data.
+"""
 
 class LinearFunction(sfit_minimizer.SFitFunction):
 

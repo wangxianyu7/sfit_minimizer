@@ -1,6 +1,8 @@
 import sfit_minimizer
 import matplotlib.pyplot as plt
-
+import numpy as np
+import MulensModel as mm
+from matplotlib import gridspec
 
 class PSPLFunction(sfit_minimizer.SFitFunction):
 
@@ -9,7 +11,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         self.parameters_to_fit = parameters_to_fit
         flattened_data = self.flatten_data()
         print(np.array(flattened_data).shape)
-        sfit_minimizer.SFitFunction.__init__(self, data=flattened_data, theta=theta)
+        sfit_minimizer.SFitFunction.__init__(self, data=flattened_data)
 
     def flatten_data(self):
         """ Concatenate good points for all datasets into a single array with 
@@ -27,7 +29,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
     def update_all(self, theta0):
         for (key, val) in enumerate(self.parameters_to_fit):
-            setattr(event.model.parameters, val, theta0[key])
+            setattr(self.event.model.parameters, val, theta0[key])
 
         sfit_minimizer.SFitFunction.update_all(self, theta0)
 
@@ -44,16 +46,26 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         print(self.res.shape)
 
     def calc_df(self):
-        """Calculate the derivatives of the fitting function and store as 
-        self.df."""
-        df = self.event.df_per_point()
-        for fit in self.event.fits():
-            df_dataset = fit.get_df_per_point(bad=False)
-            df.append(df_dataset)
+        """
+        Calculate the derivatives of the fitting function and store as
+        self.df.
 
+        """
+        #df = self.event.df_per_point()
+        df = []
+        for fit in self.event.fits():
+            df_dataset = fit.get_df_mulens_per_point(bad=False)
+            # Need to add flux factors
+            df.append(df_dataset)  # Probably need to replace with a numpy concatenation/stack function.
+
+        # Need to also add partials wrt flux
         self.df = np.flatten(np.array(df), axis=0)
         print(self.df.shape)
 
+
+datasets = [None]  # some data TBD
+model = mm.Model({})  # some model TBD
+event = mm.Event(datasets=datasets, model=model)
 
 parameters_to_fit = ['t_0', 'u_0', 't_E']
 initial_guess = [] # Wrong initial condition
@@ -73,23 +85,18 @@ print(values)
 print('+/-')
 print(sigmas)
 
-my_func.theta = values
-my_func.update_all()
+my_func.update_all(values)
 print('chi2: ', my_func.chi2)
 
+# Plot results
+gs = gridspec.GridSpec(2, 1, height_ratios=[5, 1])
 plt.figure()
-plt.title('Values')
-plt.errorbar(
-    my_func.data[:, 0], my_func.data[:, 1], 
-    yerr=my_func.data[:, 2], fmt='o')
-x = np.arange(0, 100)
-plt.plot(x, theta_new[0] + theta_new[1] * x, color='red', zorder=5)
-
-plt.figure()
-plt.title('Residuals')
-plt.errorbar(
-    my_func.data[:, 0], my_func.res, 
-    yerr=my_func.data[:, 2], fmt='o')
-plt.axhline(0, color='red', zorder=5)
+ax11 = plt.subplot(gs[0])
+my_func.event.plot_model(subtract_2450000=True)
+my_func.event.plot_data(subtract_2450000=True)
+plt.title('Data and Fitted Model (Default)')
+# Plot the residuals
+plt.subplot(gs[1], sharex=ax11)
+my_func.event.plot_residuals(subtract_2450000=True)
 
 plt.show()

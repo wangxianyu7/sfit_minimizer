@@ -31,8 +31,56 @@
 
           <div class="body" role="main">
             
-  <section id="sfit-minimizer-sfit-minimize-module">
-<h1>sfit_minimizer.sfit_minimize module<a class="headerlink" href="#sfit-minimizer-sfit-minimize-module" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sfit_minimizer.sfit_minimize">
+<span id="sfit-minimizer-sfit-minimize-module"></span><h1>sfit_minimizer.sfit_minimize module<a class="headerlink" href="#module-sfit_minimizer.sfit_minimize" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_minimize.set_initial_step_size">
+<span class="sig-prename descclassname"><span class="pre">sfit_minimizer.sfit_minimize.</span></span><span class="sig-name descname"><span class="pre">set_initial_step_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_minimize.set_initial_step_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the step size for the <a class="reference internal" href="#sfit_minimizer.sfit_minimize.minimize" title="sfit_minimizer.sfit_minimize.minimize"><code class="xref py py-func docutils literal notranslate"><span class="pre">minimize()</span></code></a> function.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>options: <em>dict</em></dt><dd><p>To specify the step, set options[‘step’] = <em>float</em>. The parameter values will be iterated by this value *
+the calculated step size. Alternatively, options[‘step’] = ‘adaptive’ will start with a default size of
+0.01. If None or ‘step’ not in options, uses a default step size of 0.1.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>fac: <em>float</em></dt><dd><p>The initial fraction of the step that will be added in each iteration of the <a class="reference internal" href="#sfit_minimizer.sfit_minimize.minimize" title="sfit_minimizer.sfit_minimize.minimize"><code class="xref py py-func docutils literal notranslate"><span class="pre">minimize()</span></code></a> routine.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_minimize.minimize">
+<span class="sig-prename descclassname"><span class="pre">sfit_minimizer.sfit_minimize.</span></span><span class="sig-name descname"><span class="pre">minimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sfit_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_minimize.minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the best-fit parameters for a function f using A. Gould’s sfit algorithm.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>sfit_obj: <a class="reference internal" href="sfit_minimizer.sfit_classes.html#sfit_minimizer.sfit_classes.SFitFunction" title="sfit_minimizer.sfit_classes.SFitFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">sfit_minimizer.sfit_classes.SFitFunction</span></code></a></dt><dd><p>The function whose parameters are being fit.</p>
+</dd>
+</dl>
+</dd>
+<dt>Keywords:</dt><dd><dl class="simple">
+<dt>x0: <em>list</em>, or list-like</dt><dd><p>Initial guess for the values of the parameters</p>
+</dd>
+<dt>tol: <em>float</em></dt><dd><p>Chi2 tolerance; i.e., when chi2_old - chi2_new &lt; tol, stop.</p>
+</dd>
+<dt>options: <em>dict</em></dt><dd><p>options for the minimizer. Currently available: ‘step’ (see <a class="reference internal" href="#sfit_minimizer.sfit_minimize.set_initial_step_size" title="sfit_minimizer.sfit_minimize.set_initial_step_size"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_initial_step_size()</span></code></a>)</p>
+</dd>
+<dt>max_iter: <em>int</em></dt><dd><p>Maximum number of iterations.</p>
+</dd>
+<dt>verbose: <em>bool</em></dt><dd><p>True = print mores stuff than usual.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p><a class="reference internal" href="sfit_minimizer.sfit_classes.html#sfit_minimizer.sfit_classes.SFitResults" title="sfit_minimizer.sfit_classes.SFitResults"><code class="xref py py-class docutils literal notranslate"><span class="pre">sfit_minimizer.sfit_classes.SFitResults</span></code></a> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

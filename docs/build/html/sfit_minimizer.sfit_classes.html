@@ -31,8 +31,306 @@
 
           <div class="body" role="main">
             
-  <section id="sfit-minimizer-sfit-classes-module">
-<h1>sfit_minimizer.sfit_classes module<a class="headerlink" href="#sfit-minimizer-sfit-classes-module" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sfit_minimizer.sfit_classes">
+<span id="sfit-minimizer-sfit-classes-module"></span><h1>sfit_minimizer.sfit_classes module<a class="headerlink" href="#module-sfit_minimizer.sfit_classes" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sfit_minimizer.sfit_classes.</span></span><span class="sig-name descname"><span class="pre">SFitResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Results of the minimization algorithm. Modeled after scipy.optimize.OptimizeResult.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><p>func: <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction" title="sfit_minimizer.sfit_classes.SFitFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">SFitFunction</span></code></a></p>
+</dd>
+<dt>Keywords:</dt><dd><dl class="simple">
+<dt>success: <em>bool</em></dt><dd><p>see <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitResults.success" title="sfit_minimizer.sfit_classes.SFitResults.success"><code class="xref py py-attr docutils literal notranslate"><span class="pre">success</span></code></a></p>
+</dd>
+<dt>msg: <em>str</em></dt><dd><p>see <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitResults.msg" title="sfit_minimizer.sfit_classes.SFitResults.msg"><code class="xref py py-attr docutils literal notranslate"><span class="pre">msg</span></code></a></p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults.x">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Best-fit (last calculated) value of the parameters.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults.sigmas">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">sigmas</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults.sigmas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uncertainties for <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitResults.x" title="sfit_minimizer.sfit_classes.SFitResults.x"><code class="xref py py-attr docutils literal notranslate"><span class="pre">x</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults.success">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">success</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults.success" title="Permalink to this definition">¶</a></dt>
+<dd><p>True = algorithm completed successfully. False = algorithm ran into a limit or failure mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults.msg">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">msg</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitResults.success" title="sfit_minimizer.sfit_classes.SFitResults.success"><code class="xref py py-attr docutils literal notranslate"><span class="pre">success</span></code></a> == False, some information about the failure mode.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitResults.iterations">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">iterations</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitResults.iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of iterations executed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sfit_minimizer.sfit_classes.</span></span><span class="sig-name descname"><span class="pre">SFitFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main class for sfit minimization routine. Establishes all the necessary functions for executing the A. Gould
+algorithm. At a minimum, the user should specify:</p>
+<blockquote>
+<div><p>EITHER <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_model" title="sfit_minimizer.sfit_classes.SFitFunction.calc_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_model()</span></code></a> OR <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_residuals" title="sfit_minimizer.sfit_classes.SFitFunction.calc_residuals"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_residuals()</span></code></a></p>
+<p>AND <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_df" title="sfit_minimizer.sfit_classes.SFitFunction.calc_df"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_df()</span></code></a>.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>data: <em>np.array</em> with shape (N, 3)</dt><dd><p>an array of the data to be fitted with columns (x, y, yerr).</p>
+</dd>
+<dt>theta: <em>list</em> of length M</dt><dd><p>trial values for the parameters of the function to be fit.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.theta">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">theta</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> or <em>np.array</em></p>
+<p>Parameters of the function being fit to the data. Setting this parameter will reset all other parameters to
+None. Use <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.update_all" title="sfit_minimizer.sfit_classes.SFitFunction.update_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">update_all()</span></code></a> to update everything.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.update_all">
+<span class="sig-name descname"><span class="pre">update_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.update_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recalculate all of the data properties with respect to the new model parameters.</p>
+<dl class="simple">
+<dt>Keywords:</dt><dd><dl class="simple">
+<dt>theta0: <em>list</em> of length M, optional</dt><dd><p>new trial values for the parameters of the function to be fit. If not provided, recalculate using
+the current value of theta.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.ymod">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">ymod</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.ymod" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (N), where each element k is the value of the model evaluated at data[k, 0].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_model">
+<span class="sig-name descname"><span class="pre">calc_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>FUNCTION SPECIFIC: Calculate expected values of the model. May
+be explicitly defined for a specific class that inherits
+SFitFunction.</p>
+<p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.ymod" title="sfit_minimizer.sfit_classes.SFitFunction.ymod"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ymod</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.residuals">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">residuals</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.residuals" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (N), where each element k = <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.ymod" title="sfit_minimizer.sfit_classes.SFitFunction.ymod"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ymod</span></code></a> [k] - data[k, 1].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_residuals">
+<span class="sig-name descname"><span class="pre">calc_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_residuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Difference between the data and the model. Either this or
+calc_model() should be explicitly defined for a specific
+class that inherits SFitFunction.</p>
+<p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.residuals" title="sfit_minimizer.sfit_classes.SFitFunction.residuals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">residuals</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.chi2">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">chi2</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.chi2" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em></p>
+<p>chi2 of the model with respect to the data.
+chi2 = Sum_k (residuals[k]^2) / data[k, 2]^2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_chi2">
+<span class="sig-name descname"><span class="pre">calc_chi2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_chi2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the chi2 of the data relative to the model.</p>
+<p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.chi2" title="sfit_minimizer.sfit_classes.SFitFunction.chi2"><code class="xref py py-attr docutils literal notranslate"><span class="pre">chi2</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_chi2">
+<span class="sig-name descname"><span class="pre">get_chi2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_chi2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the chi2 of the data w.r.t. the model. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_chi2" title="sfit_minimizer.sfit_classes.SFitFunction.calc_chi2"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_chi2()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.df">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">df</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.df" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M, N), where df[i, k] returns the partial derivative of the <em>fitting function</em> with respect
+to parameter i evaluated at point k. shape = (len(theta), len(data))</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_df">
+<span class="sig-name descname"><span class="pre">calc_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>FUNCTION SPECIFIC: Calculate the derivatives of the fitting
+function relative to each parameter theta and store as
+self.df.  Should be explicitly defined for a specific class
+that inherits SFitFunction.</p>
+<p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.df" title="sfit_minimizer.sfit_classes.SFitFunction.df"><code class="xref py py-attr docutils literal notranslate"><span class="pre">df</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.sigmas">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">sigmas</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.sigmas" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of length M</p>
+<p>Uncertainty in each parameter theta: sigma_theta_i = sqrt(c_ii)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_sigmas">
+<span class="sig-name descname"><span class="pre">calc_sigmas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_sigmas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the uncertainty in each parameter <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.theta" title="sfit_minimizer.sfit_classes.SFitFunction.theta"><code class="xref py py-attr docutils literal notranslate"><span class="pre">theta</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_sigmas">
+<span class="sig-name descname"><span class="pre">get_sigmas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_sigmas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the uncertainty in each parameter theta. see <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_sigmas" title="sfit_minimizer.sfit_classes.SFitFunction.calc_sigmas"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_sigmas()</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.step">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">step</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.step" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M)</p>
+<dl class="simple">
+<dt>Full proposed step size for each parameter theta_i:</dt><dd><p>theta_new_i = theta_old_i + step_i where
+step_i = sum_j c_ij * d_j.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_step">
+<span class="sig-name descname"><span class="pre">calc_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.step" title="sfit_minimizer.sfit_classes.SFitFunction.step"><code class="xref py py-attr docutils literal notranslate"><span class="pre">step</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_step">
+<span class="sig-name descname"><span class="pre">get_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the full step for each parameter theta_i. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_step" title="sfit_minimizer.sfit_classes.SFitFunction.calc_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_step()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.dchi2">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dchi2</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.dchi2" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M, N)</p>
+<p>Partial derivatives of the <em>chi2</em> with respect
+to the parameters, calculated at each data point.
+shape = (len(theta), len(data))</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_dchi2">
+<span class="sig-name descname"><span class="pre">calc_dchi2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_dchi2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the gradient of chi2 (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.dchi2" title="sfit_minimizer.sfit_classes.SFitFunction.dchi2"><code class="xref py py-attr docutils literal notranslate"><span class="pre">dchi2</span></code></a>) at each datapoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_dchi2">
+<span class="sig-name descname"><span class="pre">get_dchi2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_dchi2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the partial derivatives of the fitting function. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_dchi2" title="sfit_minimizer.sfit_classes.SFitFunction.calc_dchi2"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_dchi2()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_partials">
+<span class="sig-name descname"><span class="pre">get_partials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_partials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alternative to <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.get_dchi2" title="sfit_minimizer.sfit_classes.SFitFunction.get_dchi2"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_dchi2()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.dvec">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">dvec</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.dvec" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M)</p>
+<dl class="simple">
+<dt>d vector from sfit, used to calculate the <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.step" title="sfit_minimizer.sfit_classes.SFitFunction.step"><code class="xref py py-attr docutils literal notranslate"><span class="pre">step</span></code></a> size:</dt><dd><p>d_i = Sum_k (partial chi2 / partial theta_i) / 2</p>
+</dd>
+</dl>
+<p>shape = ( len(theta) )</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_dvec">
+<span class="sig-name descname"><span class="pre">calc_dvec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_dvec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the d vector and store it as <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.dvec" title="sfit_minimizer.sfit_classes.SFitFunction.dvec"><code class="xref py py-attr docutils literal notranslate"><span class="pre">dvec</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_dvec">
+<span class="sig-name descname"><span class="pre">get_dvec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_dvec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the d vector. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_dvec" title="sfit_minimizer.sfit_classes.SFitFunction.calc_dvec"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_dvec()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.bmat">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bmat</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.bmat" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M, M)</p>
+<p>b matrix from sfit. invert to find c matrix (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.cmat" title="sfit_minimizer.sfit_classes.SFitFunction.cmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cmat</span></code></a>) used for stepping and
+finding sigmas:</p>
+<blockquote>
+<div><p>b_ij = Sum_k (partial F / partial theta_i)(partial F/partial theta_j) / data[k, 2]^2</p>
+</div></blockquote>
+<p>where F is the <em>fitting function</em> and data[k, 2] are the errors. shape = ( len(theta), len(theta) ).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_bmat">
+<span class="sig-name descname"><span class="pre">calc_bmat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_bmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the b matrix (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.bmat" title="sfit_minimizer.sfit_classes.SFitFunction.bmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bmat</span></code></a>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_bmat">
+<span class="sig-name descname"><span class="pre">get_bmat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_bmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the b matrix. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_bmat" title="sfit_minimizer.sfit_classes.SFitFunction.calc_bmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_bmat()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.cmat">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">cmat</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.cmat" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>np.array</em> of shape (M, M)</p>
+<dl class="simple">
+<dt>c matrix from sfit:</dt><dd><p>c = inv(<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.bmat" title="sfit_minimizer.sfit_classes.SFitFunction.bmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bmat</span></code></a>)</p>
+</dd>
+</dl>
+<p>shape = ( len(theta), len(theta) )</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_cmat">
+<span class="sig-name descname"><span class="pre">calc_cmat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_cmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert the b matrix (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.bmat" title="sfit_minimizer.sfit_classes.SFitFunction.bmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">bmat</span></code></a>) to find the c matrix (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.cmat" title="sfit_minimizer.sfit_classes.SFitFunction.cmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cmat</span></code></a>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.get_cmat">
+<span class="sig-name descname"><span class="pre">get_cmat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.get_cmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and return the c matrix. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_cmat" title="sfit_minimizer.sfit_classes.SFitFunction.calc_cmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_cmat()</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

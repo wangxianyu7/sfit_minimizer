@@ -208,7 +208,7 @@ class SFitFunction(object):
     @property
     def residuals(self):
         """
-        *np.array* of shape (N), where each element k = :py:attr:`~ymod`[k] - data[k, 1].
+        *np.array* of shape (N), where each element k = :py:attr:`~ymod` [k] - data[k, 1].
         """
         return self._residuals
 
@@ -329,7 +329,7 @@ class SFitFunction(object):
     @property
     def step(self):
         """
-        *np.array* of size (M)
+        *np.array* of shape (M)
 
         Full proposed step size for each parameter theta_i:
             theta_new_i = theta_old_i + step_i where
@@ -397,7 +397,7 @@ class SFitFunction(object):
     @property
     def dvec(self):
         """
-        *np.array* of size (M)
+        *np.array* of shape (M)
 
         d vector from sfit, used to calculate the :py:attr:`~step` size:
             d_i = Sum_k (partial chi2 / partial theta_i) / 2
@@ -425,7 +425,7 @@ class SFitFunction(object):
     @property
     def bmat(self):
         """
-        *np.array* of size (M, M)
+        *np.array* of shape (M, M)
 
         b matrix from sfit. invert to find c matrix (:py:attr:`~cmat`) used for stepping and
         finding sigmas:
@@ -454,7 +454,7 @@ class SFitFunction(object):
     @property
     def cmat(self):
         """
-        *np.array* of size (M, M)
+        *np.array* of shape (M, M)
 
         c matrix from sfit:
             c = inv(:py:attr:`~bmat`)

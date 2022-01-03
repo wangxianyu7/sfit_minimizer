@@ -49,8 +49,7 @@ print(values)
 print('+/-')
 print(sigmas)
 
-my_func.theta = values
-my_func.update_all()
+my_func.update_all(values)
 print('chi2: ', my_func.chi2)
 
 plt.figure()

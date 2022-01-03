@@ -139,7 +139,7 @@ class SFitFunction(object):
     def theta(self, value):
         self._reset_all()
         if value is None:
-            self._theta = val0ue
+            self._theta = value
         else:
             if isinstance(value, (list, np.ndarray)):
                 self._theta = value

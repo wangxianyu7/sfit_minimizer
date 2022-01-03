@@ -104,15 +104,15 @@ def minimize(
             msg += 'New step: {0}, {1}\n'.format(sfit_obj.chi2, x_new)
             sfit_obj.update_all(x_old)
             return SFitResults(
-                sfit_obj, success=False, msg=msg)
+                sfit_obj, success=False, msg=msg, iterations=i)
         else:
             old_chi2 = sfit_obj.chi2
             x_old = x_new
 
     sfit_obj.update_all(x_new)
     if i < max_iter - 1:
-        return SFitResults(sfit_obj, success=True)
+        return SFitResults(sfit_obj, success=True, iterations=i)
     else:
         return SFitResults(
             sfit_obj, success=False,
-            msg='max iterations exceeded: {0}'.format(max_iter))
+            msg='max iterations exceeded: {0}'.format(max_iter), iterations=i)

@@ -33,7 +33,7 @@ class LinearFunction(sfit_minimizer.SFitFunction):
 
 def test_perfect_chi2():
     """chi2 should be 0"""
-    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'test_data_10perfect.txt'), skiprows=2)
+    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10perfect.txt'), skiprows=2)
     theta = [3, 2]
     my_func = LinearFunction(data=data, theta=theta)
     my_func.calc_chi2()
@@ -50,7 +50,7 @@ def test_fit():
     :return:
     """
     # Fake data
-    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'test_data_10000pts_Poisson.txt'), skiprows=2)
+    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
 
     # Wrong initial condition
     theta = [4, 2.1]
@@ -94,7 +94,7 @@ def test_fit():
 
 # Test that the minimize function produces the expected results
 def test_minimize():
-    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'test_data_10000pts_Poisson.txt'), skiprows=2)
+    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
     initial_guess = [4, 2.1]  # Wrong initial condition
     my_func = LinearFunction(data=data)
 

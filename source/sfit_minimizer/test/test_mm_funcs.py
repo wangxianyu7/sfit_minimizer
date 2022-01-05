@@ -15,5 +15,6 @@ final values and sigmas.
 2. both datasets
 3. fixing fb = 0 for one datasets
 4. fixing fs = X for one dataset
+5. Different step sizes: fixed, adaptive
 
 """

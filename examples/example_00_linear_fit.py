@@ -1,6 +1,7 @@
 import sfit_minimizer
 import matplotlib.pyplot as plt
 import numpy as np
+import os.path
 
 """
 Example of fitting a polynomial of the form y = m * x + b to some data.
@@ -30,7 +31,7 @@ class LinearFunction(sfit_minimizer.SFitFunction):
         self.df = np.array(df)
 
 
-data = np.loadtxt('../data/test_data_10000pts_Poisson.txt', skiprows=2)
+data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
 initial_guess = [4, 2.1]  # Wrong initial condition
 my_func = LinearFunction(data=data)
 

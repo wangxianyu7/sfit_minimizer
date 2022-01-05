@@ -362,7 +362,10 @@ class SFitFunction(object):
         *np.array* of shape (M, N)
 
         Partial derivatives of the *chi2* with respect
-        to the parameters, calculated at each data point.
+        to the parameters, calculated at each data point:
+
+            dchi2_i,k = -2 * :py:attr:`~residuals` * :py:attr:`~df` / data[k, 2]**2
+
         shape = (len(theta), len(data))
         """
         return self._dchi2

@@ -3,6 +3,7 @@ from os import path
 from .version import __version__
 from sfit_minimizer.sfit_minimize import *
 from sfit_minimizer.sfit_classes import *
+from sfit_minimizer.mm_funcs import *
 
 MODULE_PATH = path.abspath(__file__)
 for i in range(3):

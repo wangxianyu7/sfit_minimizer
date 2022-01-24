@@ -7,6 +7,13 @@ import sfit_minimizer
 import MulensModel as mm
 
 """
+# Next Step: 
+
+Clean up comparison tests: 
+- rename them so they don't start with "test"
+- Fix the comparisons in detail so the properties of SFitFunction are compared 
+to the right parts of the Fortran sfit output (e.g., get rid of limb-darkening parameters).
+
 # Thoughts on test data:
 
 Should start by generating two perfect test datasets with only a few (but different numbers of) points each and with 
@@ -100,10 +107,14 @@ def compare_results(datafiles, dir):
 
     # Initialize SFitFunction
     parameters_to_fit = ['t_0', 'u_0', 't_E']
-    initial_guess = matrices[0].a  # Wrong initial condition
+    initial_guess = matrices[0].a[0:3]  # Wrong initial condition
 
     datasets = []
     for filename in datafiles:
+        print(filename, initial_guess.shape)
+        initial_guess = np.hstack((initial_guess, [1.0, 0.0]))
+        print(initial_guess.shape)
+
         data = mm.MulensData(
             file_name=os.path.join(data_path, filename), phot_fmt='mag')
         datasets.append(data)
@@ -111,6 +122,7 @@ def compare_results(datafiles, dir):
     model = mm.Model(
         {parameters_to_fit[i]: initial_guess[i] for i in range(3)})
     event = mm.Event(datasets=datasets, model=model)
+    event.fit_fluxes()
 
     my_func = sfit_minimizer.mm_funcs.PSPLFunction(event, parameters_to_fit)
 
@@ -118,7 +130,7 @@ def compare_results(datafiles, dir):
     # first 3 iterations
     new_guess = initial_guess
     for i in range(3):
-        my_func.update_all(new_guess)
+        my_func.update_all(theta0=new_guess)
         test_calcs(my_func, matrices[i])
         new_guess += my_func.step * fac
 

@@ -45,28 +45,37 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         return flattened_data.transpose()
 
     def update_all(self, theta0=None):
+        #print(theta0)
+
         for (key, val) in enumerate(self.parameters_to_fit):
             print(key)
             setattr(self.event.model.parameters, val, theta0[key])
 
         for i in range(len(self.event.datasets)):
-            print(len(self.parameters_to_fit) + 2 * i, len(self.parameters_to_fit) + 2 * i + 1)
-            self.event.fits[i].fix_source_flux = theta0[len(self.parameters_to_fit) + 2 * i]
-            self.event.fits[i].fix_blend_flux = theta0[len(self.parameters_to_fit) + 2 * i + 1]
+            #print(len(self.parameters_to_fit) + 2 * i,
+            #      len(self.parameters_to_fit) + 2 * i + 1)
+            #print(theta0)
+            #print(self.event.fits)
+            self.event.fits[i].fix_source_flux = theta0[
+                len(self.parameters_to_fit) + 2 * i]
+            self.event.fits[i].fix_blend_flux = theta0[
+                len(self.parameters_to_fit) + 2 * i + 1]
 
         sfit_minimizer.SFitFunction.update_all(self, theta0)
 
-    def calc_res(self):
+    def calc_residuals(self):
         """Calculate expected values of the residuals"""
         # Need to add a thing to update the model parameters using theta.
 
-        res = []
-        for fit in self.event.fits():
+        for i, fit in enumerate(self.event.fits):
             res_dataset = fit.get_residuals(phot_fmt='flux', bad=False)
-            res.append(res_dataset[0])
+            if i == 0:
+                res = np.array(res_dataset[0])
+            else:
+                res = np.hstack((res, res_dataset[0]))
 
-        self.res = np.flatten(res, axis=0)
-        print(self.res.shape)
+        self.residuals = res
+        print(self.residuals.shape)
 
     def calc_df(self):
         """
@@ -75,7 +84,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
         """
         dfunc = None
-        for i, fit in enumerate(self.event.fits()):
+        for i, fit in enumerate(self.event.fits):
             dfunc_dataset = fit.source_flux * fit.get_df_mulens_per_point(bad=False)
             # M x N
             dfunc_df_source = fit.get_data_magnification(bad=False)  # 1 x N

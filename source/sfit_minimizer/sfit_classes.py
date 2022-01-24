@@ -162,7 +162,7 @@ class SFitFunction(object):
             self._reset_all()
             self.theta = theta0
 
-        self.calc_model()
+        #self.calc_model()
         self.calc_residuals()
         self.calc_chi2()
         self.calc_df()

@@ -31,15 +31,18 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         """ Concatenate good points for all datasets into a single array with
         columns: Date, flux, err.
         """
-        flattened_data = []
-        for dataset in self.event.datasets():
+        for i, dataset in enumerate(self.event.datasets):
             data = [dataset.time[dataset.good], dataset.flux[dataset.good],
                     dataset.err_flux[dataset.good]]
-            flattened_data.append(data)
+            #print(len(data))
+            if i == 0:
+                flattened_data = np.array(data)
+            else:
+                flattened_data = np.hstack((flattened_data, data))
 
-        print(np.array(flattened_data).shape)
+            #print(flattened_data.shape)
 
-        return np.flatten(flattened_data, axis=0)
+        return flattened_data.transpose()
 
     def update_all(self, theta0=None):
         for (key, val) in enumerate(self.parameters_to_fit):
@@ -48,8 +51,8 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
         for i in range(len(self.event.datasets)):
             print(len(self.parameters_to_fit) + 2 * i, len(self.parameters_to_fit) + 2 * i + 1)
-            self.event.fit[i].fix_source_flux = theta0[len(self.parameters_to_fit) + 2 * i]
-            self.event.fit[i].fix_blend_flux = theta0[len(self.parameters_to_fit) + 2 * i + 1]
+            self.event.fits[i].fix_source_flux = theta0[len(self.parameters_to_fit) + 2 * i]
+            self.event.fits[i].fix_blend_flux = theta0[len(self.parameters_to_fit) + 2 * i + 1]
 
         sfit_minimizer.SFitFunction.update_all(self, theta0)
 

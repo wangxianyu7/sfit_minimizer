@@ -33,13 +33,15 @@ class LinearFunction(sfit_minimizer.SFitFunction):
 
 def test_perfect_chi2():
     """chi2 should be 0"""
-    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10perfect.txt'), skiprows=2)
+    data = np.loadtxt(os.path.join(
+        sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10perfect.txt'),
+        skiprows=2)
     theta = [3, 2]
     my_func = LinearFunction(data=data, theta=theta)
     my_func.calc_chi2()
 
     tol = 1e-6
-    assert np.sum(my_func.residuals) < tol
+    np.testing.assert_almost_equal(my_func.residuals, 0., decimal=3)
     assert my_func.chi2 < tol
 
 
@@ -63,7 +65,7 @@ def test_fit():
 
     # Check ymod, res
     y = data[:, 0] * theta[1] + theta[0]
-    res = y - data[:, 1]
+    res = data[:, 1] - y
     np.testing.assert_almost_equal(my_func.ymod, y)
     np.testing.assert_almost_equal(my_func.residuals, res)
 
@@ -75,8 +77,8 @@ def test_fit():
     b[1, 1] = np.sum(data[:, 0] ** 2 / data[:, 2] ** 2)
     c = np.linalg.inv(b)
     d = np.zeros(2)
-    d[0] = np.sum(-res / data[:, 2] ** 2)
-    d[1] = np.sum(-res * data[:, 0] / data[:, 2] ** 2)
+    d[0] = np.sum(res / data[:, 2] ** 2)
+    d[1] = np.sum(res * data[:, 0] / data[:, 2] ** 2)
 
     np.testing.assert_almost_equal(my_func.bmat, b)
     np.testing.assert_almost_equal(my_func.cmat, c)

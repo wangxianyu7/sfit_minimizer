@@ -16,21 +16,17 @@ Should start by generating two perfect test datasets with only a few (but differ
 different values of fs, fb. Then, run through sfit.f to retrieve bmat, dvec, cmat, at several successive steps and then
 final values and sigmas.
 
-# Tests:
+# Tests I need:
 
-1. single dataset
-2. both datasets
-3. fixing fb = 0 for one datasets
-4. fixing fs = X for one dataset
-5. Different step sizes: fixed, adaptive
-6. with parallax
-7. One parameter offset, all parameters offset
-8. Test results for a dataset with many points.
+1. fixed blending for a single observatory
+2. parallax
 
 Remember: Don't over-complicate it. The above is over-complicated.
 
 """
 
+
+mm.utils.MAG_ZEROPOINT = 18.
 data_path = os.path.join(sfit_minimizer.DATA_PATH, 'MMTest')
 
 
@@ -50,7 +46,7 @@ class FortranSFitFile(object):
                 if len(str_vec) == 1:
                     value = float(str_vec[0])
                 else:
-                    print(attr, str_vec)
+                    # print(attr, str_vec)
                     value = np.array([float(item) for item in str_vec])
 
                 self.__setattr__(attr, value)
@@ -84,9 +80,9 @@ class ComparisonTest(object):
 
         self.datasets = []
         for filename in datafiles:
-            print(filename, self.initial_guess.shape)
+            #print(filename, self.initial_guess.shape)
             self.initial_guess = np.hstack((self.initial_guess, [1.0, 0.0]))
-            print(self.initial_guess.shape)
+            #print(self.initial_guess.shape)
 
             data = mm.MulensData(
                 file_name=os.path.join(data_path, filename), phot_fmt='mag')
@@ -98,7 +94,7 @@ class ComparisonTest(object):
             {self.parameters_to_fit[i]: self.initial_guess[i] for i in range(
                 self.n_params)})
         self.event = mm.Event(datasets=self.datasets, model=self.model)
-        self.event.fit_fluxes()
+        #self.event.fit_fluxes()
 
         self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
             self.event, self.parameters_to_fit)
@@ -112,7 +108,12 @@ class ComparisonTest(object):
         # first 3 iterations
         new_guess = self.initial_guess
         for i in range(3):
+            print('testing iteration', i)
             self.my_func.update_all(theta0=new_guess)
+            #print(new_guess)
+            #print(self.matrices[i].a)
+            #print(self.my_func.event.fluxes)
+            self._compare_vector(new_guess, self.matrices[i].a, decimal=3)
             self.compare_calcs(self.matrices[i])
             new_guess += self.my_func.step * self.fac
 
@@ -121,16 +122,46 @@ class ComparisonTest(object):
         result = sfit_minimizer.minimize(
             self.my_func, x0=self.initial_guess, tol=1e-3,
             options={'step': 'adaptive'})
+
+        sigmas = self.my_func.get_sigmas()
         # Values
-        self._compare_vector(self.my_func.theta, result.a)
+        #print(self.my_func.theta)
+        #print(self.sfit_results.a)
+        #self._compare_vector(
+        #    self.my_func.theta, self.sfit_results.a, decimal=2)
+        for i, x in enumerate(self.my_func.theta):
+            decimal = 3
+            if np.round(x / sigmas[i]) < decimal:
+                decimal = np.round(x / sigmas[i])
+
+            ind_i = self._get_index(i)
+            #print(i, ind_i, x, sigmas[i], self.sfit_results.a[ind_i])
+            assert( np.abs(x - self.sfit_results.a[ind_i]) < sigmas[i])
 
         # sigmas
-        self._compare_vector(self.my_func.get_sigmas, result.s)
+        self._compare_vector(
+           sigmas, self.sfit_results.s, decimal=2)
 
     def compare_calcs(self, sfit_matrix):
         # chi2
-        np.testing.assert_almost_equal(
-            np.sum(sfit_matrix.chi2), self.my_func.chi2)
+        if isinstance(sfit_matrix.chi2, (list, np.ndarray)):
+            if len(self.datasets) != len(sfit_matrix.chi2):
+                raise ValueError(
+                    'Number of sfit chi2s != number of datasets: {0}, {1}'.format(
+                        len(self.datasets), len(sfit_matrix.chi2)))
+
+        else:
+            sfit_matrix.chi2 = [sfit_matrix.chi2]
+
+        for i in range(len(self.datasets)):
+            # print(i)
+            #print('sfit', sfit_matrix.chi2[i])
+            #print('my_func', self.my_func.event.get_chi2_for_dataset(i))
+            # print('fluxes', self.my_func.event.fluxes)
+            # print('model', self.my_func.event.model.parameters)
+            np.testing.assert_almost_equal(
+                np.sum(sfit_matrix.chi2[i]) /
+                self.my_func.event.get_chi2_for_dataset(i), 1.)
 
         # b matrix
         n_elements = int(np.sqrt(len(sfit_matrix.b)))
@@ -138,12 +169,18 @@ class ComparisonTest(object):
         bmat = sfit_matrix.b.reshape(shape)
         self._compare_matrix(self.my_func.bmat, bmat)
 
+        # d vector
+        #print('my d', self.my_func.dvec)
+        #print('sfit d', sfit_matrix.d)
+        self._compare_vector(self.my_func.dvec, sfit_matrix.d)
+
         # c matrix
         cmat = sfit_matrix.c.reshape(shape)
-        self._compare_matrix(self.my_func.cmat, cmat)
+        #print('my c', self.my_func.cmat)
+        #print('sfit c', cmat)
+        #print('ratio ulens', self.my_func.cmat[0:3, 0:3] / cmat[0:3, 0:3])
+        self._compare_matrix(self.my_func.cmat, cmat, decimal=4)
 
-        # d vector
-        self._compare_vector(self.my_func.dvec, sfit_matrix.d, )
         # step
         self._compare_vector(self.my_func.step, sfit_matrix.da)
 
@@ -176,30 +213,86 @@ class ComparisonTest(object):
                 raise IndexError('i > n_params')
         else:
             # flux parameters (don't know if this will work for fixed blending)
+            # i = n_params + 2. * n + 0; fs
+            # i = n_params + 2. * n + 1; fb
+            # index = 9 + 3 * n + 0; fs
+            # index = 9 + 3 * n + 1 ; fb
             ftype = (i - self.n_params) % 2
-            n = np.floor((i - self.n_params) % self.n_obs)
-            index = 9 + ftype + n * 3 * self.n_obs
+            n = (i - self.n_params) / 2.
+            if ftype == 1:
+                n -= 0.5
+
+            index = int(9. + ftype + np.round(n) * 3)
+            #print('inds:', i, ftype, n, index)
 
         return index
 
-    def _compare_vector(self, my_vector, sfit_vector):
+    def _compare_vector(self, my_vector, sfit_vector, decimal=5):
         for i, value in enumerate(my_vector):
             index = self._get_index(i)
 
-            print(i, index)
-            np.testing.assert_almost_equal(value, sfit_vector[index])
+            #print(i, index)
+            if value != 0.0:
+                np.testing.assert_almost_equal(
+                    value / sfit_vector[index], 1., decimal=decimal)
+            else:
+                np.testing.assert_almost_equal(
+                    value,  sfit_vector[index], decimal=decimal)
 
-    def _compare_matrix(self, my_matrix, sfit_matrix):
+    def _compare_matrix(self, my_matrix, sfit_matrix, verbose=False, decimal=5):
         n_elements = my_matrix.shape[0]
+        #print('my', my_matrix.shape)
+        #print('sfit', sfit_matrix.shape)
         for i in range(n_elements):
             ind_i = self._get_index(i)
             for j in range(n_elements):
                 ind_j = self._get_index(j)
-                print(
-                    i, j, ind_i, ind_j, my_matrix[i, j],
-                    sfit_matrix[ind_i, ind_j])
-                np.testing.assert_almost_equal(
-                    my_matrix[i, j], sfit_matrix[ind_i, ind_j])
+                if verbose:
+                    print(
+                        i, j, ind_i, ind_j)
+                    print(my_matrix[i, j],
+                        sfit_matrix[ind_i, ind_j])
+
+                if my_matrix[i, j] != 0.0:
+                    np.testing.assert_almost_equal(
+                        my_matrix[i, j] / sfit_matrix[ind_i, ind_j], 1.,
+                        decimal=decimal)
+                else:
+                    np.testing.assert_almost_equal(
+                        my_matrix[i, j], sfit_matrix[ind_i, ind_j], decimal=decimal)
+
+
+def test_cmat():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    comparison_dir = 'PSPL_1_{0}'.format(0.1)
+    print(comparison_dir)
+
+    test = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit)
+    test.my_func.update_all(theta0=test.initial_guess)
+
+    n_elements = int(np.sqrt(len(test.matrices[0].c)))
+    shape = (n_elements, n_elements)
+    sfit_cmat = test.matrices[0].c.reshape(shape)
+
+    for i in range(test.n_params):
+        ind_i = test._get_index(i)
+        for j in range(test.n_params):
+            ind_j = test._get_index(j)
+            my_el = test.my_func.cmat[i, j]
+            #sig_el = np.sqrt(
+            #s    test.matrices[0].s[ind_i] * test.matrices[0].s[ind_j])
+            sfit_el = sfit_cmat[ind_i, ind_j]
+            #guess = my_el / np.sqrt(test.my_func.cmat[i, i] * test.my_func.cmat[j, j])
+            #print('my, sfit, guess')
+            #print(i, j, ind_i, ind_j)
+            #print(my_el, sfit_el, guess)
+            if np.abs(sfit_el) > 1.:
+                np.testing.assert_almost_equal(my_el / sfit_el, 1., decimal=6)
+            else:
+                np.testing.assert_almost_equal(my_el, sfit_el, decimal=6)
 
 
 def test_pspl_1():

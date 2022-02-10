@@ -1,19 +1,57 @@
 import sfit_minimizer
-import matplotlib.pyplot as plt
+
 import MulensModel as mm
+import os.path
+import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
-datasets = [None]  # some data TBD
-model = mm.Model({})  # some model TBD
-event = mm.Event(datasets=datasets, model=model)
+
+data_path = os.path.join(sfit_minimizer.DATA_PATH, 'MMTest')
+datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+datasets = []
+fix_source_flux = {}
+fix_blend_flux = {}
+for filename in datafiles:
+    data = mm.MulensData(
+        file_name=os.path.join(data_path, filename), phot_fmt='mag')
+    datasets.append(data)
+    fix_source_flux[data] = 1.0
+    fix_blend_flux[data] = 0.0
+
+datasets.append(datasets[-1])
+
+model = mm.Model({'t_0': 8645.09961, 'u_0': 0.30000, 't_E': 25.00000})
+event = mm.Event(
+    datasets=datasets, model=model,
+    fix_source_flux=fix_source_flux,
+    fix_blend_flux=fix_blend_flux)
+
+# Temporarty testting code
+
+event.fit_fluxes()
+print(event.get_chi2())
+# for fit in event.fits:
+#     for key, value in fit._get_d_A_d_params_for_point_lens_model(['t_0', 'u_0', 't_E']).items():
+#         print(key, value.shape)
+# end temp code
 
 parameters_to_fit = ['t_0', 'u_0', 't_E']
-initial_guess = []  # Wrong initial condition
+initial_guess = []
+for key in parameters_to_fit:
+    if key == 't_E':
+        initial_guess.append(model.parameters.parameters[key].value)
+    else:
+        initial_guess.append(model.parameters.parameters[key])
+
+for i in range(len(datasets)):
+    initial_guess.append(1.0)
+    initial_guess.append(0.0)
+
 my_func = sfit_minimizer.mm_funcs.PSPLFunction(event, parameters_to_fit)
 
 result = sfit_minimizer.minimize(
-    my_func, x0=initial_guess, tol=1e-3, 
-    options={'step': 'adaptive'})
+    my_func, x0=initial_guess, tol=1e-5,
+    options={'step': 'adaptive'}, verbose=True)
 
 print('Full Results:')
 print(result)

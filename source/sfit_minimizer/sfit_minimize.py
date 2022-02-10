@@ -81,6 +81,7 @@ def minimize(
                 old_chi2, sfit_obj.chi2, sfit_obj.step, fac, x_old, None, -1))
 
     for i in range(max_iter):
+        # print('minimize steps', x_old, fac, sfit_obj.step)
         x_new = x_old + fac * sfit_obj.step
         sfit_obj.update_all(x_new)
 
@@ -93,18 +94,18 @@ def minimize(
             if old_chi2 - sfit_obj.chi2 < 1.0:
                 fac = 0.1
 
-        if old_chi2 - sfit_obj.chi2 < tol:
-            if verbose:
-                print('tolerance reached!')
-
-            break
-        elif old_chi2 < sfit_obj.chi2:
+        if old_chi2 < sfit_obj.chi2:
             msg = 'New chi2 worse than old chi2.\n'
             msg += 'Previous step: {0}, {1}\n'.format(old_chi2, x_old)
             msg += 'New step: {0}, {1}\n'.format(sfit_obj.chi2, x_new)
             sfit_obj.update_all(x_old)
             return SFitResults(
                 sfit_obj, success=False, msg=msg, iterations=i)
+        elif old_chi2 - sfit_obj.chi2 < tol:
+                if verbose:
+                    print('tolerance reached!')
+
+                break
         else:
             old_chi2 = sfit_obj.chi2
             x_old = x_new

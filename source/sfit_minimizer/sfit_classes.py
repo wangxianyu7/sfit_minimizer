@@ -107,7 +107,7 @@ class SFitFunction(object):
                 'data must be an np.array object with shape (N, 3). Type: {0}'.format(type(data))
             )
 
-        print('data checker implemented')
+        #print('data checker implemented')
 
         self.theta = theta
         self._reset_all()
@@ -148,7 +148,7 @@ class SFitFunction(object):
                     'theta must be either list or np.array. Type: {0}'.format(type(value))
                 )
 
-    def update_all(self, theta0=None):
+    def update_all(self, theta0=None, verbose=False):
         """
         Recalculate all of the data properties with respect to the new model parameters.
 
@@ -157,6 +157,9 @@ class SFitFunction(object):
                 new trial values for the parameters of the function to be fit. If not provided, recalculate using
                 the current value of theta.
 
+            verbose: *bool*, optional
+                Default is False. If True, prints output after each stage for debugging.
+
         """
         if theta0 is not None:
             self._reset_all()
@@ -164,13 +167,37 @@ class SFitFunction(object):
 
         #self.calc_model()
         self.calc_residuals()
+        if verbose:
+            print('residuals', self.residuals)
+
         self.calc_chi2()
+        if verbose:
+            print('chi2', self.chi2)
+
         self.calc_df()
+        if verbose:
+            print('df', self.df)
+
         self.calc_dchi2()
+        if verbose:
+            print('dchi2', self.dchi2)
+
         self.calc_dvec()
+        if verbose:
+            print('dvec', self.dvec)
+
         self.calc_bmat()
+        if verbose:
+            print('bmat', self.bmat)
+
         self.calc_cmat()
+        if verbose:
+            print('cmat', self.cmat)
+
         self.calc_step()
+        if verbose:
+            print('step', self.step)
+
 
     # Model Values
     @property
@@ -208,7 +235,7 @@ class SFitFunction(object):
     @property
     def residuals(self):
         """
-        *np.array* of shape (N), where each element k = :py:attr:`~ymod` [k] - data[k, 1].
+        *np.array* of shape (N), where each element k = :py:attr: data[k, 1] - `~ymod` [k]
         """
         return self._residuals
 
@@ -235,7 +262,7 @@ class SFitFunction(object):
         if self.ymod is None:
             self.calc_model()
 
-        self.residuals = self.ymod - self.data[:, 1]
+        self.residuals = self.data[:, 1] - self.ymod
 
     # Chi2
     @property
@@ -403,7 +430,7 @@ class SFitFunction(object):
         *np.array* of shape (M)
 
         d vector from sfit, used to calculate the :py:attr:`~step` size:
-            d_i = Sum_k (partial chi2 / partial theta_i) / 2
+            d_i = - Sum_k (partial chi2 / partial theta_i) / 2
 
         shape = ( len(theta) )
         """
@@ -416,7 +443,7 @@ class SFitFunction(object):
         if self.dchi2 is None:
             self.calc_dchi2()
 
-        self._dvec = np.sum(self.dchi2, axis=1) / 2.
+        self._dvec = -np.sum(self.dchi2, axis=1) / 2.
 
     def get_dvec(self):
         """Calculate and return the d vector. See :py:func:`~calc_dvec`."""

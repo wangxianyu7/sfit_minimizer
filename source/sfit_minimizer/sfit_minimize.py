@@ -7,13 +7,16 @@ def set_initial_step_size(options):
 
     Arguments:
         options: *dict*
-            To specify the step, set options['step'] = *float*. The parameter values will be iterated by this value *
-            the calculated step size. Alternatively, options['step'] = 'adaptive' will start with a default size of
-            0.01. If None or 'step' not in options, uses a default step size of 0.1.
+            To specify the step, set options['step'] = *float*. The parameter
+            values will be iterated by this value * the calculated step size.
+            Alternatively, options['step'] = 'adaptive' will start with a
+            default size of 0.01. If None or 'step' not in options, uses a
+            default step size of 0.1.
 
     Returns:
         fac: *float*
-            The initial fraction of the step that will be added in each iteration of the :py:func:`~minimize` routine.
+            The initial fraction of the step that will be added in each
+            iteration of the :py:func:`~minimize` routine.
     """
     default = 0.1
 
@@ -42,7 +45,8 @@ def minimize(
         verbose=False):
 
     """
-    Find the best-fit parameters for a function f using A. Gould's sfit algorithm.
+    Find the best-fit parameters for a function f using A. Gould's sfit
+    algorithm.
 
     Arguments:
         sfit_obj: :py:class:`sfit_minimizer.sfit_classes.SFitFunction`
@@ -56,7 +60,8 @@ def minimize(
             Chi2 tolerance; i.e., when chi2_old - chi2_new < tol, stop.
 
         options: *dict*
-            options for the minimizer. Currently available: 'step' (see :py:func:`~set_initial_step_size()`)
+            options for the minimizer. Currently available: 'step' (see
+            :py:func:`~set_initial_step_size()`)
 
         max_iter: *int*
             Maximum number of iterations.
@@ -76,7 +81,8 @@ def minimize(
     x_old = x0
     if verbose:
         print('{6} {0:>16} {1:>16} {2} {3}\n{4}\n{5}\n'.format(
-                'old_chi2', 'new_chi2', '[step]', 'stepfrac', '[old params]', '[new params]', 'i'))
+                'old_chi2', 'new_chi2', '[step]', 'stepfrac', '[old params]',
+                '[new params]', 'i'))
         print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
                 old_chi2, sfit_obj.chi2, sfit_obj.step, fac, x_old, None, -1))
 
@@ -88,7 +94,6 @@ def minimize(
         if verbose:
             print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
                 old_chi2, sfit_obj.chi2, sfit_obj.step, fac, x_old, x_new, i))
-
 
         if options['step'] == 'adaptive':
             if old_chi2 - sfit_obj.chi2 < 1.0:
@@ -102,10 +107,10 @@ def minimize(
             return SFitResults(
                 sfit_obj, success=False, msg=msg, iterations=i)
         elif old_chi2 - sfit_obj.chi2 < tol:
-                if verbose:
-                    print('tolerance reached!')
+            if verbose:
+                print('tolerance reached!')
 
-                break
+            break
         else:
             old_chi2 = sfit_obj.chi2
             x_old = x_new

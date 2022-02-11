@@ -3,7 +3,8 @@ import numpy as np
 
 class SFitResults(object):
     """
-    Results of the minimization algorithm. Modeled after scipy.optimize.OptimizeResult.
+    Results of the minimization algorithm. Modeled after
+    scipy.optimize.OptimizeResult.
 
     Arguments:
         func: :py:class:`~SFitFunction`
@@ -52,7 +53,8 @@ class SFitResults(object):
 
     @property
     def success(self):
-        """ True = algorithm completed successfully. False = algorithm ran into a limit or failure mode."""
+        """ True = algorithm completed successfully. False = algorithm ran into
+        a limit or failure mode."""
         return self._success
 
     @success.setter
@@ -61,7 +63,8 @@ class SFitResults(object):
 
     @property
     def msg(self):
-        """ If :py:attr:`~success` == False, some information about the failure mode."""
+        """ If :py:attr:`~success` == False, some information about the failure
+        mode."""
         return self._msg
 
     @msg.setter
@@ -77,10 +80,12 @@ class SFitResults(object):
     def iterations(self, value):
         self._iter = value
 
+
 class SFitFunction(object):
     """
-    Main class for sfit minimization routine. Establishes all the necessary functions for executing the A. Gould
-    algorithm. At a minimum, the user should specify:
+    Main class for sfit minimization routine. Establishes all the necessary
+    functions for executing the A. Gould algorithm. At a minimum, the user
+    should specify:
 
       EITHER :py:func:`~calc_model` OR :py:func:`~calc_residuals`
 
@@ -100,14 +105,15 @@ class SFitFunction(object):
             if data.shape[1] == 3:
                 self.data = data
             else:
-                raise ValueError('data must have shape (N, 3). Shape: {0}'.format(data.shape))
+                raise ValueError(
+                    'data must have shape (N, 3). Shape: {0}'.format(
+                        data.shape))
 
         else:
             raise TypeError(
-                'data must be an np.array object with shape (N, 3). Type: {0}'.format(type(data))
+                'data must be an np.array object with shape (N, 3). ' +
+                'Type: {0}'.format(type(data))
             )
-
-        #print('data checker implemented')
 
         self.theta = theta
         self._reset_all()
@@ -130,8 +136,9 @@ class SFitFunction(object):
         """
         *list* or *np.array*
 
-        Parameters of the function being fit to the data. Setting this parameter will reset all other parameters to
-        None. Use :py:func:`~update_all()` to update everything.
+        Parameters of the function being fit to the data. Setting this
+        parameter will reset all other parameters to None. Use
+        :py:func:`~update_all()` to update everything.
         """
         return self._theta
 
@@ -145,27 +152,29 @@ class SFitFunction(object):
                 self._theta = value
             else:
                 raise TypeError(
-                    'theta must be either list or np.array. Type: {0}'.format(type(value))
+                    'theta must be either list or np.array. ' +
+                    'Type: {0}'.format(type(value))
                 )
 
     def update_all(self, theta0=None, verbose=False):
         """
-        Recalculate all of the data properties with respect to the new model parameters.
+        Recalculate all of the data properties with respect to the new model
+        parameters.
 
         Keywords:
             theta0: *list* of length M, optional
-                new trial values for the parameters of the function to be fit. If not provided, recalculate using
-                the current value of theta.
+                new trial values for the parameters of the function to be fit.
+                If not provided, recalculate using the current value of theta.
 
             verbose: *bool*, optional
-                Default is False. If True, prints output after each stage for debugging.
+                Default is False. If True, prints output after each stage for
+                debugging.
 
         """
         if theta0 is not None:
             self._reset_all()
             self.theta = theta0
 
-        #self.calc_model()
         self.calc_residuals()
         if verbose:
             print('residuals', self.residuals)
@@ -198,12 +207,12 @@ class SFitFunction(object):
         if verbose:
             print('step', self.step)
 
-
     # Model Values
     @property
     def ymod(self):
         """
-        *np.array* of shape (N), where each element k is the value of the model evaluated at data[k, 0].
+        *np.array* of shape (N), where each element k is the value of the model
+        evaluated at data[k, 0].
         """
         return self._ymod
 
@@ -214,11 +223,13 @@ class SFitFunction(object):
                 self._ymod = value
             else:
                 raise ValueError(
-                    'ymod should have the same length as data. data.shape: {0}, ymod.shape: {1}'.format(
-                        self.data.shape, value.shape))
+                    'ymod should have the same length as data. data.shape: ' +
+                    '{0}, ymod.shape: {1}'.format(self.data.shape, value.shape))
 
         else:
-            raise TypeError('ymod must be an np.array object. Type: {0}'.format(type(value)))
+            raise TypeError(
+                'ymod must be an np.array object. Type: {0}'.format(
+                    type(value)))
 
     def calc_model(self):
         """
@@ -229,13 +240,15 @@ class SFitFunction(object):
         sets :py:attr:`~ymod`
 
         """
-        raise NotImplementedError('User must define calc_model() for a child class of SFitFunction.')
+        raise NotImplementedError(
+            'User must define calc_model() for a child class of SFitFunction.')
 
     # Residuals
     @property
     def residuals(self):
         """
-        *np.array* of shape (N), where each element k = :py:attr: data[k, 1] - `~ymod` [k]
+        *np.array* of shape (N), where each element
+        k = :py:attr: data[k, 1] - `~ymod` [k]
         """
         return self._residuals
 
@@ -246,10 +259,12 @@ class SFitFunction(object):
                 self._residuals = value
             else:
                 raise ValueError(
-                    'residuals should have the same length as data. data.shape: {0}, residuals.shape: {1}'.format(
+                    'residuals should have the same length as data. ' +
+                    'data.shape: {0}, residuals.shape: {1}'.format(
                         self.data.shape, value.shape))
         else:
-            raise TypeError('residuals must be an np.array object. Type: {0}'.format(type(value)))
+            raise TypeError('residuals must be an np.array object. ' +
+                            'Type: {0}'.format(type(value)))
 
     def calc_residuals(self):
         """
@@ -287,7 +302,8 @@ class SFitFunction(object):
         self._chi2 = np.sum(self.residuals ** 2 / self.data[:, 2] ** 2)
 
     def get_chi2(self):
-        """Calculate and return the chi2 of the data w.r.t. the model. See :py:func:`~calc_chi2`."""
+        """Calculate and return the chi2 of the data w.r.t. the model. See
+        :py:func:`~calc_chi2`."""
         self.calc_chi2()
 
         return self.chi2
@@ -296,8 +312,9 @@ class SFitFunction(object):
     @property
     def df(self):
         """
-        *np.array* of shape (M, N), where df[i, k] returns the partial derivative of the *fitting function* with respect
-        to parameter i evaluated at point k. shape = (len(theta), len(data))
+        *np.array* of shape (M, N), where df[i, k] returns the partial
+        derivative of the *fitting function* with respect to parameter i
+        evaluated at point k. shape = (len(theta), len(data))
         """
         if self._df is None:
             self.calc_df()
@@ -311,11 +328,14 @@ class SFitFunction(object):
                 self._df = value
             else:
                 raise ValueError(
-                    'df should have the shape (M, N) where M is the number of parameters and N is the number of data' +
-                    ' points. len(theta): {2}, data.shape: {0}, df.shape: {1}'.format(
+                    'df should have the shape (M, N) where M is the number of' +
+                    'parameters and N is the number of data' +
+                    ' points. len(theta): ' +
+                    '{2}, data.shape: {0}, df.shape: {1}'.format(
                         self.data.shape, value.shape, len(self.theta)))
         else:
-            raise TypeError('df must be an np.array object. Type: {0}'.format(type(value)))
+            raise TypeError(
+                'df must be an np.array object. Type: {0}'.format(type(value)))
 
     def calc_df(self):
         """
@@ -326,7 +346,8 @@ class SFitFunction(object):
 
         sets :py:attr:`~df`
         """
-        raise NotImplementedError('User must define calc_model() for a child class of SFitFunction.')
+        raise NotImplementedError(
+            'User must define calc_model() for a child class of SFitFunction.')
 
     # Sigmas
     @property
@@ -347,7 +368,8 @@ class SFitFunction(object):
         self._sigmas = np.sqrt(np.diagonal(self.cmat))
 
     def get_sigmas(self):
-        """Calculate and return the uncertainty in each parameter theta. see :py:func:`~calc_sigmas`"""
+        """Calculate and return the uncertainty in each parameter theta. see
+        :py:func:`~calc_sigmas`"""
         self.calc_sigmas()
 
         return self.sigmas
@@ -377,7 +399,8 @@ class SFitFunction(object):
         self._step = np.sum(self.cmat * self.dvec, axis=1)
 
     def get_step(self):
-        """Calculate and return the full step for each parameter theta_i. See :py:func:`~calc_step`."""
+        """Calculate and return the full step for each parameter theta_i. See
+        :py:func:`~calc_step`."""
         self.calc_step()
 
         return self.step
@@ -391,14 +414,15 @@ class SFitFunction(object):
         Partial derivatives of the *chi2* with respect
         to the parameters, calculated at each data point:
 
-            dchi2_i,k = -2 * :py:attr:`~residuals` * :py:attr:`~df` / data[k, 2]**2
+        dchi2_i,k = -2 * :py:attr:`~residuals` * :py:attr:`~df` / data[k, 2]**2
 
         shape = (len(theta), len(data))
         """
         return self._dchi2
 
     def calc_dchi2(self):
-        """Calculate the gradient of chi2 (:py:attr:`~dchi2`) at each datapoint."""
+        """Calculate the gradient of chi2 (:py:attr:`~dchi2`) at each
+        datapoint."""
 
         if self.df is None:
             self.calc_df()
@@ -414,7 +438,8 @@ class SFitFunction(object):
         self._dchi2 = np.array(chi2_gradient)
 
     def get_dchi2(self):
-        """Calculate and return the partial derivatives of the fitting function. See :py:func:`~calc_dchi2`."""
+        """Calculate and return the partial derivatives of the fitting
+        function. See :py:func:`~calc_dchi2`."""
         self.calc_df()
 
         return np.sum(self.df, axis=1)
@@ -457,11 +482,15 @@ class SFitFunction(object):
         """
         *np.array* of shape (M, M)
 
-        b matrix from sfit. invert to find c matrix (:py:attr:`~cmat`) used for stepping and
-        finding sigmas:
-            b_ij = Sum_k (partial F / partial theta_i)(partial F/partial theta_j) / data[k, 2]^2
+        b matrix from sfit. invert to find c matrix (:py:attr:`~cmat`) used for
+        stepping and finding sigmas:
+            b_ij
+            = Sum_k (
+              (partial F / partial theta_i)(partial F/partial theta_j) /
+              data[k, 2]^2 )
 
-        where F is the *fitting function* and data[k, 2] are the errors. shape = ( len(theta), len(theta) ).
+        where F is the *fitting function* and data[k, 2] are the errors.
+        shape = ( len(theta), len(theta) ).
         """
         return self._bmat
 
@@ -493,7 +522,8 @@ class SFitFunction(object):
         return self._cmat
 
     def calc_cmat(self):
-        """Invert the b matrix (:py:attr:`~bmat`) to find the c matrix (:py:attr:`~cmat`)."""
+        """Invert the b matrix (:py:attr:`~bmat`) to find the c matrix
+        (:py:attr:`~cmat`)."""
         if self.bmat is None:
             self.calc_bmat()
 

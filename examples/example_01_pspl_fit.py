@@ -20,20 +20,11 @@ for filename in datafiles:
 
 datasets.append(datasets[-1])
 
-model = mm.Model({'t_0': 8645.09961, 'u_0': 0.30000, 't_E': 25.00000})
+model = mm.Model({'t_0': 8650., 'u_0': 0.30000, 't_E': 25.00000})
 event = mm.Event(
     datasets=datasets, model=model,
     fix_source_flux=fix_source_flux,
     fix_blend_flux=fix_blend_flux)
-
-# Temporarty testting code
-
-event.fit_fluxes()
-print(event.get_chi2())
-# for fit in event.fits:
-#     for key, value in fit._get_d_A_d_params_for_point_lens_model(['t_0', 'u_0', 't_E']).items():
-#         print(key, value.shape)
-# end temp code
 
 parameters_to_fit = ['t_0', 'u_0', 't_E']
 initial_guess = []

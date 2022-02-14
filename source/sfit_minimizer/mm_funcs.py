@@ -51,7 +51,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
         return flattened_data.transpose()
 
-    def update_all(self, theta0=None):
+    def update_all(self, theta0=None, verbose=False):
         for (key, val) in enumerate(self.parameters_to_fit):
             setattr(self.event.model.parameters, val, theta0[key])
 
@@ -62,7 +62,11 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
                 len(self.parameters_to_fit) + 2 * i + 1]
 
         self.event.fit_fluxes(bad=False)
-        sfit_minimizer.SFitFunction.update_all(self, theta0, verbose=False)
+        if verbose:
+            print('new value:', theta0)
+            print('fluxes:', self.event.fluxes)
+
+        sfit_minimizer.SFitFunction.update_all(self, theta0, verbose=verbose)
 
     def calc_residuals(self):
         """Calculate expected values of the residuals"""

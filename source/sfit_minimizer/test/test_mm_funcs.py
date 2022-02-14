@@ -46,7 +46,8 @@ class FortranSFitFile(object):
 
 class ComparisonTest(object):
 
-    def __init__(self, datafiles=None, comp_dir=None, parameters_to_fit=None):
+    def __init__(self, datafiles=None, comp_dir=None, parameters_to_fit=None,
+                 coords=None, verbose=False):
         # Get step size from directory name
         str_vec = comp_dir.split('_')
         self.fac = float(str_vec[-1])
@@ -66,7 +67,9 @@ class ComparisonTest(object):
         # parameters_to_fit
         self.parameters_to_fit = parameters_to_fit
         self.n_params = len(self.parameters_to_fit)
-        self.initial_guess = self.matrices[0].a[0:self.n_params]
+        self.initial_guess = []
+        for i in range(self.n_params):
+            self.initial_guess.append(self.matrices[0].a[self._get_index(i)])
 
         self.datasets = []
         for filename in datafiles:
@@ -76,15 +79,33 @@ class ComparisonTest(object):
                 file_name=os.path.join(data_path, filename), phot_fmt='mag')
             self.datasets.append(data)
 
+        date_threshold = 120000.
+        if ((self.datasets[0].time[0] > date_threshold) and
+                ('t_0' in self.parameters_to_fit)):
+            for i, parameter in enumerate(self.parameters_to_fit):
+                if parameter == 't_0':
+                    if self.initial_guess[i] < date_threshold:
+                        self.initial_guess[i] += 2450000.
+
         self.n_obs = len(self.datasets)
 
         self.model = mm.Model(
             {self.parameters_to_fit[i]: self.initial_guess[i] for i in range(
-                self.n_params)})
+                self.n_params)}, coords=coords)
         self.event = mm.Event(datasets=self.datasets, model=self.model)
 
         self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
             self.event, self.parameters_to_fit)
+
+        self.verbose = verbose
+
+        if self.verbose:
+            print('dataset, length')
+            for i in range(self.n_obs):
+                print(i, len(self.datasets[i].time))
+
+            print('initial guess', self.initial_guess)
+            print('initial model', self.model)
 
     def run(self):
         self.test_3_iterations()
@@ -96,7 +117,7 @@ class ComparisonTest(object):
         new_guess = self.initial_guess
         for i in range(3):
             print('testing iteration', i)
-            self.my_func.update_all(theta0=new_guess)
+            self.my_func.update_all(theta0=new_guess, verbose=self.verbose)
             self._compare_vector(new_guess, self.matrices[i].a, decimal=2)
             self.compare_calcs(self.matrices[i])
             new_guess += self.my_func.step * self.fac
@@ -280,4 +301,17 @@ def test_pspl_2():
         test = ComparisonTest(
             datafiles=datafiles, comp_dir=comparison_dir,
             parameters_to_fit=parameters_to_fit)
+        test.run()
+
+def test_pspl_par():
+    datafiles = ['PSPL_par_Obs_1.pho', 'PSPL_par_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E', 'pi_E_N', 'pi_E_E']
+    coords = "18:00:00 -30:00:00"
+    for fac in [0.01]:
+        comparison_dir = 'PSPL_par_{0}'.format(fac)
+        print(comparison_dir)
+        test = ComparisonTest(
+            datafiles=datafiles, comp_dir=comparison_dir,
+            parameters_to_fit=parameters_to_fit, coords=coords,
+            verbose=True)
         test.run()

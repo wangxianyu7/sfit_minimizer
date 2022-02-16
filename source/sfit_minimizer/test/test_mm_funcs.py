@@ -11,8 +11,7 @@ import MulensModel as mm
 
 1. fixed blending for a single observatory
 2. parallax
-
-Remember: Don't over-complicate it. The above is over-complicated.
+3. bad data
 
 """
 
@@ -315,3 +314,5 @@ def test_pspl_par():
             parameters_to_fit=parameters_to_fit, coords=coords,
             verbose=True)
         test.run()
+
+

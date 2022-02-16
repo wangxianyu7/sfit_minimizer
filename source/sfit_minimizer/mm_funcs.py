@@ -73,9 +73,10 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         for i, fit in enumerate(self.event.fits):
             res_dataset = fit.get_residuals(phot_fmt='flux', bad=False)
             if i == 0:
-                res = np.array(res_dataset[0])
+                res = np.array(res_dataset[0][fit.dataset.good])
             else:
-                res = np.hstack((res, res_dataset[0]))
+                res = np.hstack(
+                    (res, res_dataset[0][fit.dataset.good]))
 
         self.residuals = res
 
@@ -90,7 +91,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             dA_dparm = fit.get_d_A_d_params_for_point_lens_model(
                 self.parameters_to_fit)
             for j, key in enumerate(self.parameters_to_fit):
-                x = fit.source_flux * dA_dparm[key]
+                x = fit.source_flux * dA_dparm[key][fit.dataset.good]
                 if j == 0:
                     dfunc_dataset = x
                 else:
@@ -98,7 +99,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
             # M x N
             dfunc_df_source = np.array(
-                [fit.get_data_magnification(bad=False)])  # 1 x N
+                [fit.get_data_magnification(bad=False)[fit.dataset.good]])  # 1 x N
             dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))  # 1 x N
 
             # resulting shape should be M+2 x N
@@ -110,7 +111,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             else:
                 x = np.vstack(
                     (dfunc_dataset[:len(self.parameters_to_fit), :],
-                        np.zeros( (i * 2, len(fit.dataset.time)) )) )
+                        np.zeros( (i * 2, np.sum(fit.dataset.good)) )) )
                 y = np.hstack(
                     (np.zeros( (2, dfunc.shape[1]) ), dfunc_dataset[-2:, :],) )
                 dfunc = np.hstack((dfunc, x))

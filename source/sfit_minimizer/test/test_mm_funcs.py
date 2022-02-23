@@ -47,6 +47,7 @@ class ComparisonTest(object):
 
     def __init__(self, datafiles=None, comp_dir=None, parameters_to_fit=None,
                  coords=None, verbose=False):
+
         # Get step size from directory name
         str_vec = comp_dir.split('_')
         self.fac = float(str_vec[-1])
@@ -91,6 +92,9 @@ class ComparisonTest(object):
         self.model = mm.Model(
             {self.parameters_to_fit[i]: self.initial_guess[i] for i in range(
                 self.n_params)}, coords=coords)
+        if 'pi_E_N' in self.parameters_to_fit:
+            self.model.parameters.t_0_par = self.initial_guess[0]
+
         self.event = mm.Event(datasets=self.datasets, model=self.model)
 
         self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
@@ -106,6 +110,7 @@ class ComparisonTest(object):
             print('initial guess', self.initial_guess)
             print('initial model', self.model)
 
+
     def run(self):
         self.test_3_iterations()
         self.test_final_results()
@@ -117,7 +122,8 @@ class ComparisonTest(object):
         for i in range(3):
             print('testing iteration', i)
             self.my_func.update_all(theta0=new_guess, verbose=self.verbose)
-            self._compare_vector(new_guess, self.matrices[i].a, decimal=2)
+            self._compare_vector(
+                new_guess, self.matrices[i].a, decimal=2)
             self.compare_calcs(self.matrices[i])
             new_guess += self.my_func.step * self.fac
 
@@ -132,13 +138,19 @@ class ComparisonTest(object):
         self.compare_chi2(self.sfit_results)
 
         sigmas = self.my_func.get_sigmas()
-        # Values
-        self._compare_vector(
-            self.my_func.theta, self.sfit_results.a, decimal=2)
-        for i, x in enumerate(self.my_func.theta):
+        for i, value0 in enumerate(self.my_func.theta):
+            # Step
             np.testing.assert_almost_equal(self.my_func.step[i], 0.0, decimal=3)
-            ind_i = self._get_index(i)
-            assert(np.abs(x - self.sfit_results.a[ind_i]) < 0.01 * sigmas[i])
+
+            # Value
+            index = self._get_index(i)
+            if i == 0:
+                value = self._t0_correction(value0)
+            else:
+                value = value0
+
+            assert(
+                np.abs(value - self.sfit_results.a[index]) < 0.05 * sigmas[i])
 
         # sigmas
         self._compare_vector(
@@ -152,17 +164,21 @@ class ComparisonTest(object):
         n_elements = int(np.sqrt(len(sfit_matrix.b)))
         shape = (n_elements, n_elements)
         bmat = sfit_matrix.b.reshape(shape)
-        self._compare_matrix(self.my_func.bmat, bmat)
+        self._compare_matrix(
+            self.my_func.bmat, bmat, decimal=2, verbose=self.verbose)
 
         # d vector
-        self._compare_vector(self.my_func.dvec, sfit_matrix.d)
+        self._compare_vector(
+            self.my_func.dvec, sfit_matrix.d, verbose=self.verbose)
 
         # c matrix
         cmat = sfit_matrix.c.reshape(shape)
-        self._compare_matrix(self.my_func.cmat, cmat, decimal=4)
+        self._compare_matrix(
+            self.my_func.cmat, cmat, decimal=2, verbose=self.verbose)
 
         # step
-        self._compare_vector(self.my_func.step, sfit_matrix.da)
+        self._compare_vector(
+            self.my_func.step, sfit_matrix.da, verbose=self.verbose)
 
     def compare_chi2(self, sfit_matrix):
         if isinstance(sfit_matrix.chi2, (list, np.ndarray)):
@@ -222,9 +238,25 @@ class ComparisonTest(object):
 
         return index
 
-    def _compare_vector(self, my_vector, sfit_vector, decimal=5):
-        for i, value in enumerate(my_vector):
+    def _t0_correction(self, value):
+        if value > 12000.:
+            return value - 2450000.
+        else:
+            return value
+
+    def _compare_vector(
+            self, my_vector, sfit_vector, decimal=5, verbose=False):
+        for i, value0 in enumerate(my_vector):
             index = self._get_index(i)
+
+            if i == 0:
+                value = self._t0_correction(value0)
+            else:
+                value = value0
+
+            if verbose:
+                print(i, index)
+                print(value, sfit_vector[index])
 
             if value != 0.0:
                 np.testing.assert_almost_equal(
@@ -239,6 +271,7 @@ class ComparisonTest(object):
             ind_i = self._get_index(i)
             for j in range(n_elements):
                 ind_j = self._get_index(j)
+
                 if verbose:
                     print(i, j, ind_i, ind_j)
                     print(my_matrix[i, j], sfit_matrix[ind_i, ind_j])
@@ -313,6 +346,6 @@ def test_pspl_par():
             datafiles=datafiles, comp_dir=comparison_dir,
             parameters_to_fit=parameters_to_fit, coords=coords,
             verbose=True)
-        test.run()
-
+        #test.run()
+        test.test_final_results()
 

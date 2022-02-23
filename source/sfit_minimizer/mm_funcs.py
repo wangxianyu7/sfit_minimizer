@@ -22,13 +22,21 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
     # - how to pass that information to this class?
     # - how to implement fixing the fluxes.
 
-    def __init__(self, event, parameters_to_fit):
+    def __init__(self, event, parameters_to_fit, estimate_fluxes=False):
         self.event = event
         fix_source_flux = {}
         fix_blend_flux = {}
-        for dataset in self.event.datasets:
-            fix_source_flux[dataset] = 1.0
-            fix_blend_flux[dataset] = 0.0
+        if estimate_fluxes:
+            self.event.fit_fluxes()
+            for dataset in self.event.datasets:
+                (source_flux, blend_flux) = self.event.get_flux_for_dataset(
+                    dataset)
+                fix_source_flux[dataset] = source_flux
+                fix_blend_flux[dataset] = blend_flux
+        else:
+            for dataset in self.event.datasets:
+                fix_source_flux[dataset] = 1.0
+                fix_blend_flux[dataset] = 0.0
 
         self.event.fix_source_flux = fix_source_flux
         self.event.fix_blend_flux = fix_blend_flux

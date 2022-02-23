@@ -105,10 +105,10 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
                 else:
                     dfunc_dataset = np.vstack((dfunc_dataset, x))
 
-            # M x N
+            # 1 x N
             dfunc_df_source = np.array(
-                [fit.get_data_magnification(bad=False)[fit.dataset.good]])  # 1 x N
-            dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))  # 1 x N
+                [fit.get_data_magnification(bad=False)[fit.dataset.good]])
+            dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))
 
             # resulting shape should be M+2 x N
             dfunc_dataset = np.vstack(

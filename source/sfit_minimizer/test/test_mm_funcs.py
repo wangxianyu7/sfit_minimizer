@@ -110,7 +110,6 @@ class ComparisonTest(object):
             print('initial guess', self.initial_guess)
             print('initial model', self.model)
 
-
     def run(self):
         self.test_3_iterations()
         self.test_final_results()
@@ -335,6 +334,7 @@ def test_pspl_2():
             parameters_to_fit=parameters_to_fit)
         test.run()
 
+
 def test_pspl_par():
     datafiles = ['PSPL_par_Obs_1.pho', 'PSPL_par_Obs_2.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E', 'pi_E_N', 'pi_E_E']
@@ -345,7 +345,5 @@ def test_pspl_par():
         test = ComparisonTest(
             datafiles=datafiles, comp_dir=comparison_dir,
             parameters_to_fit=parameters_to_fit, coords=coords,
-            verbose=True)
-        #test.run()
+            verbose=False)
         test.test_final_results()
-

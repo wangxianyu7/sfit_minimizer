@@ -46,11 +46,11 @@ class FortranSFitFile(object):
 class ComparisonTest(object):
 
     def __init__(self, datafiles=None, comp_dir=None, parameters_to_fit=None,
-                 coords=None, verbose=False):
+                 coords=None, verbose=False, fix_blend_flux=None):
 
         # Get step size from directory name
         str_vec = comp_dir.split('_')
-        self.fac = float(str_vec[-1])
+        self.fac = float(str_vec[2])
 
         # Read in SFit results
         self.sfit_results = FortranSFitFile(
@@ -96,6 +96,10 @@ class ComparisonTest(object):
             self.model.parameters.t_0_par = self.initial_guess[0]
 
         self.event = mm.Event(datasets=self.datasets, model=self.model)
+        if fix_blend_flux is not None:
+            for i, item in enumerate(fix_blend_flux):
+                if item is not False:
+                    self.event.fix_blend_flux[self.datasets[i]] = item
 
         self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
             self.event, self.parameters_to_fit)
@@ -347,3 +351,15 @@ def test_pspl_par():
             parameters_to_fit=parameters_to_fit, coords=coords,
             verbose=False)
         test.test_final_results()
+
+def test_pspl_fbzero():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    fac = 0.01
+    comparison_dir = 'PSPL_1_{0}_fbzero'.format(fac)
+    print(comparison_dir)
+    test = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
+        verbose=True)
+    test.run()

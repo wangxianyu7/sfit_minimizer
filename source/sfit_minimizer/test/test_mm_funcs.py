@@ -403,6 +403,19 @@ def test_pspl_fs_fixed():
         verbose=True)
     test.run()
 
+def test_pspl_Obs1_fixed():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    fac = 0.01
+    comparison_dir = 'PSPL_1_{0}_Obs1FixedFluxes'.format(fac)
+    print(comparison_dir)
+    test = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_source_flux=[1.3, False],
+        fix_blend_flux=[0.0, False],
+        verbose=True)
+    test.run()
+
 def test_flux_indexing():
     datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E']

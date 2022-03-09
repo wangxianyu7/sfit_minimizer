@@ -182,6 +182,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             n_fluxes_dataset = 0
             dA_dparm = fit.get_d_A_d_params_for_point_lens_model(
                 self.parameters_to_fit)
+            dfunc_dataset = None
             for j, key in enumerate(self.parameters_to_fit):
                 x = fit.source_flux * dA_dparm[key][fit.dataset.good]
                 if j == 0:
@@ -193,18 +194,24 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             if self.fs_indices[i] is not None:
                 dfunc_df_source = np.array(
                     [fit.get_data_magnification(bad=False)[fit.dataset.good]])
-                dfunc_dataset = np.vstack(
-                    (dfunc_dataset, dfunc_df_source))
+                if dfunc_dataset is not None:
+                    dfunc_dataset = np.vstack((dfunc_dataset, dfunc_df_source))
+                else:
+                    dfunc_dataset = dfunc_df_source
+
                 n_fluxes_dataset += 1
 
             if self.fb_indices[i] is not None:
                 dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))
-                dfunc_dataset = np.vstack(
-                    (dfunc_dataset, dfunc_df_blend))
+                if dfunc_dataset is not None:
+                    dfunc_dataset = np.vstack((dfunc_dataset, dfunc_df_blend))
+                else:
+                    dfunc_dataset = dfunc_df_blend
+
                 n_fluxes_dataset += 1
 
             # resulting shape should be M+2 x N
-            if dfunc is None:
+            if (dfunc is None) and (dfunc_dataset is not None):
                 dfunc = dfunc_dataset
             else:
                 # add columns of zeros for flux parameters for other datasets.

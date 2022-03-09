@@ -50,7 +50,11 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
                             ind_num = j
 
                 if ind_num < 0:
-                    fs_index = len(self.parameters_to_fit)
+                    if self.fb_indices[-1] is not None:
+                        fs_index = self.fb_indices[-1] + 1
+                    else:
+                        fs_index = len(self.parameters_to_fit)
+
                 else:
                     fs_index = ind_num + n
 

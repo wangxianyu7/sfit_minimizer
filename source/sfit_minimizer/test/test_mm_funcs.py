@@ -46,7 +46,8 @@ class FortranSFitFile(object):
 class ComparisonTest(object):
 
     def __init__(self, datafiles=None, comp_dir=None, parameters_to_fit=None,
-                 coords=None, verbose=False, fix_blend_flux=None):
+                 coords=None, verbose=False, fix_blend_flux=None,
+                 fix_source_flux=None):
 
         # Get step size from directory name
         str_vec = comp_dir.split('_')
@@ -80,9 +81,14 @@ class ComparisonTest(object):
             flux_guess = [1.0, 0.0]
             if isinstance(fix_blend_flux, list):
                 if isinstance(fix_blend_flux[i], float):
-                    flux_guess = [1.0]
+                    flux_guess.pop(1)
 
-            self.initial_guess = np.hstack((self.initial_guess, flux_guess))
+            if isinstance(fix_source_flux, list):
+                if isinstance(fix_source_flux[i], float):
+                    flux_guess.pop(0)
+
+            if len(flux_guess) > 0:
+                self.initial_guess = np.hstack((self.initial_guess, flux_guess))
 
         date_threshold = 120000.
         if ((self.datasets[0].time[0] > date_threshold) and
@@ -105,6 +111,11 @@ class ComparisonTest(object):
             for i, item in enumerate(fix_blend_flux):
                 if item is not False:
                     self.event.fix_blend_flux[self.datasets[i]] = item
+
+        if fix_source_flux is not None:
+            for i, item in enumerate(fix_source_flux):
+                if item is not False:
+                    self.event.fix_source_flux[self.datasets[i]] = item
 
         self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
             self.event, self.parameters_to_fit)
@@ -380,6 +391,17 @@ def test_pspl_fbzero():
         verbose=True)
     test.run()
 
+def test_pspl_fs_fixed():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    fac = 0.01
+    comparison_dir = 'PSPL_1_{0}_fs_fixed'.format(fac)
+    print(comparison_dir)
+    test = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 2.1],
+        verbose=True)
+    test.run()
 
 def test_flux_indexing():
     datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
@@ -419,3 +441,21 @@ def test_flux_indexing():
 
     assert test_4.my_func.fs_indices == [3, 5]
     assert test_4.my_func.fb_indices == [4, 6]
+
+    test_5 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 2.1],
+        verbose=True)
+
+    assert test_5.my_func.fs_indices == [3, None]
+    assert test_5.my_func.fb_indices == [4, 5]
+
+    test_6 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_source_flux=[0.0, False],
+        verbose=True)
+
+    print(test_6.my_func.fs_indices)
+    print(test_6.my_func.fb_indices)
+    assert test_6.my_func.fs_indices == [None, 4]
+    assert test_6.my_func.fb_indices == [3, 5]

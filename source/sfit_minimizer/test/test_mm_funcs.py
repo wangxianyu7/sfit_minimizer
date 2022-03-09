@@ -78,12 +78,11 @@ class ComparisonTest(object):
             self.datasets.append(data)
 
             flux_guess = [1.0, 0.0]
-            if isinstance(fix_blend_flux, (list)):
-                if isinstance(fix_blend_flux[i], (float)):
+            if isinstance(fix_blend_flux, list):
+                if isinstance(fix_blend_flux[i], float):
                     flux_guess = [1.0]
 
             self.initial_guess = np.hstack((self.initial_guess, flux_guess))
-
 
         date_threshold = 120000.
         if ((self.datasets[0].time[0] > date_threshold) and
@@ -233,25 +232,14 @@ class ComparisonTest(object):
             else:
                 raise IndexError('i > n_params')
         else:
-            # flux parameters (doesn't work for fixed blending)
+            # flux parameters
             # i = n_params + 2. * n + 0; fs
             # i = n_params + 2. * n + 1; fb
             # index = 9 + 3 * n + 0; fs
             # index = 9 + 3 * n + 1 ; fb
-            ftype = (i - self.n_params) % 2
-            n = (i - self.n_params) / 2.
-            if ftype == 1:
-                n -= 0.5
 
-            index = int(9. + ftype + np.round(n) * 3)
-
-            # New formulation:
             # source flux
             nob = np.where(np.array(self.my_func.fs_indices) == i)
-            # print(i)
-            # print('fs_indices, nob')
-            # print(self.my_func.fs_indices)
-            # print(nob)
             if len(nob[0]) > 0:
                 if len(nob[0]) == 1:
                     index = int(9 + 3 * nob[0][0])
@@ -261,14 +249,10 @@ class ComparisonTest(object):
             else:
                 # blend flux
                 nob = np.where(np.array(self.my_func.fb_indices) == i)
-                # print('fb_indices, nob')
-                # print(self.my_func.fs_indices)
-                # print(nob)
                 if len(nob[0]) == 1:
                     index = int(9 + 3 * nob[0][0] + 1)
                 else:
                     raise AttributeError('Multiple matches in fb_indices.')
-
 
         return index
 
@@ -383,6 +367,7 @@ def test_pspl_par():
             verbose=False)
         test.test_final_results()
 
+
 def test_pspl_fbzero():
     datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E']
@@ -394,6 +379,7 @@ def test_pspl_fbzero():
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
         verbose=True)
     test.run()
+
 
 def test_flux_indexing():
     datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']

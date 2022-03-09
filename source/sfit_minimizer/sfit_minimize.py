@@ -37,7 +37,7 @@ def set_initial_step_size(options):
     else:
         fac = default
 
-    return fac
+    return (fac, options)
 
 
 def minimize(
@@ -73,8 +73,8 @@ def minimize(
         :py:class:`sfit_minimizer.sfit_classes.SFitResults` object.
 
     """
-    
-    fac = set_initial_step_size(options)
+
+    (fac, options) = set_initial_step_size(options)
 
     sfit_obj.update_all(x0)
     old_chi2 = sfit_obj.chi2

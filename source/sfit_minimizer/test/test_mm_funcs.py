@@ -72,12 +72,18 @@ class ComparisonTest(object):
             self.initial_guess.append(self.matrices[0].a[self._get_index(i)])
 
         self.datasets = []
-        for filename in datafiles:
-            self.initial_guess = np.hstack((self.initial_guess, [1.0, 0.0]))
-
+        for i, filename in enumerate(datafiles):
             data = mm.MulensData(
                 file_name=os.path.join(data_path, filename), phot_fmt='mag')
             self.datasets.append(data)
+
+            flux_guess = [1.0, 0.0]
+            if isinstance(fix_blend_flux, (list)):
+                if isinstance(fix_blend_flux[i], (float)):
+                    flux_guess = [1.0]
+
+            self.initial_guess = np.hstack((self.initial_guess, flux_guess))
+
 
         date_threshold = 120000.
         if ((self.datasets[0].time[0] > date_threshold) and
@@ -126,7 +132,7 @@ class ComparisonTest(object):
             print('testing iteration', i)
             self.my_func.update_all(theta0=new_guess, verbose=self.verbose)
             self._compare_vector(
-                new_guess, self.matrices[i].a, decimal=2)
+                new_guess, self.matrices[i].a, decimal=2, verbose=self.verbose)
             self.compare_calcs(self.matrices[i])
             new_guess += self.my_func.step * self.fac
 
@@ -227,7 +233,7 @@ class ComparisonTest(object):
             else:
                 raise IndexError('i > n_params')
         else:
-            # flux parameters (don't know if this will work for fixed blending)
+            # flux parameters (doesn't work for fixed blending)
             # i = n_params + 2. * n + 0; fs
             # i = n_params + 2. * n + 1; fb
             # index = 9 + 3 * n + 0; fs
@@ -238,6 +244,31 @@ class ComparisonTest(object):
                 n -= 0.5
 
             index = int(9. + ftype + np.round(n) * 3)
+
+            # New formulation:
+            # source flux
+            nob = np.where(np.array(self.my_func.fs_indices) == i)
+            # print(i)
+            # print('fs_indices, nob')
+            # print(self.my_func.fs_indices)
+            # print(nob)
+            if len(nob[0]) > 0:
+                if len(nob[0]) == 1:
+                    index = int(9 + 3 * nob[0][0])
+                else:
+                    raise AttributeError('Multiple matches in fs_indices.')
+
+            else:
+                # blend flux
+                nob = np.where(np.array(self.my_func.fb_indices) == i)
+                # print('fb_indices, nob')
+                # print(self.my_func.fs_indices)
+                # print(nob)
+                if len(nob[0]) == 1:
+                    index = int(9 + 3 * nob[0][0] + 1)
+                else:
+                    raise AttributeError('Multiple matches in fb_indices.')
+
 
         return index
 
@@ -363,3 +394,42 @@ def test_pspl_fbzero():
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
         verbose=True)
     test.run()
+
+def test_flux_indexing():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    fac = 0.01
+    comparison_dir = 'PSPL_1_{0}_fbzero'.format(fac)
+    print(comparison_dir)
+
+    test_1 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
+        verbose=True)
+
+    assert test_1.my_func.fs_indices == [3, 4]
+    assert test_1.my_func.fb_indices == [None, 5]
+
+    test_2 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_blend_flux=[False, 0.],
+        verbose=True)
+
+    assert test_2.my_func.fs_indices == [3, 5]
+    assert test_2.my_func.fb_indices == [4, None]
+
+    test_3 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., 0.],
+        verbose=True)
+
+    assert test_3.my_func.fs_indices == [3, 4]
+    assert test_3.my_func.fb_indices == [None, None]
+
+    test_4 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_blend_flux=[False, False],
+        verbose=True)
+
+    assert test_4.my_func.fs_indices == [3, 5]
+    assert test_4.my_func.fb_indices == [4, 6]

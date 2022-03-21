@@ -116,9 +116,9 @@ class SFitFunction(object):
             )
 
         self.theta = theta
-        self._reset_all()
+        self.reset_all()
 
-    def _reset_all(self):
+    def reset_all(self):
         self._ymod = None
         self._residuals = None
         self._chi2 = None
@@ -144,7 +144,7 @@ class SFitFunction(object):
 
     @theta.setter
     def theta(self, value):
-        self._reset_all()
+        self.reset_all()
         if value is None:
             self._theta = value
         else:
@@ -172,7 +172,7 @@ class SFitFunction(object):
 
         """
         if theta0 is not None:
-            self._reset_all()
+            self.reset_all()
             self.theta = theta0
 
         self.calc_residuals()

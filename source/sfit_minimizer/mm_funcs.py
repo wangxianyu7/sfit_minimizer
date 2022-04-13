@@ -137,10 +137,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
         return flattened_data.transpose()
 
-    def update_all(self, theta0=None, verbose=False):
-        if theta0 is None:
-            raise ValueError('theta0 must be passed to update_all()')
-
+    def _update_ulens_params(self, theta0):
         for (key, val) in enumerate(self.parameters_to_fit):
             setattr(self.event.model.parameters, val, theta0[key])
 
@@ -151,6 +148,11 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             if self.fb_indices[i] is not None:
                 self.event.fix_blend_flux[dataset] = theta0[self.fb_indices[i]]
 
+    def update_all(self, theta0=None, verbose=False):
+        if theta0 is None:
+            raise ValueError('theta0 must be passed to update_all()')
+
+        self._update_ulens_params(theta0)
         self.event.fit_fluxes(bad=False)
         if verbose:
             print('new value:', theta0)

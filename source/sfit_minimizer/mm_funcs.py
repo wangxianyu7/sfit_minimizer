@@ -148,12 +148,14 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             if self.fb_indices[i] is not None:
                 self.event.fix_blend_flux[dataset] = theta0[self.fb_indices[i]]
 
+            self.event.fit_fluxes(bad=False)
+
     def update_all(self, theta0=None, verbose=False):
         if theta0 is None:
             raise ValueError('theta0 must be passed to update_all()')
 
         self._update_ulens_params(theta0)
-        self.event.fit_fluxes(bad=False)
+
         if verbose:
             print('new value:', theta0)
             print('fluxes:', self.event.fluxes)

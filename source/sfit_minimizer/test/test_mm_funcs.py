@@ -106,6 +106,11 @@ class ComparisonTest(object):
         if 'pi_E_N' in self.parameters_to_fit:
             self.model.parameters.t_0_par = self.initial_guess[0]
 
+        if 'rho' in self.parameters_to_fit:
+            self.model.set_magnification_methods([
+                self.model.parameters.t_0 - 1.5, 'finite_source_LD_Yoo04_direct',
+                self.model.parameters.t_0 + 1.5])
+
         self.event = mm.Event(datasets=self.datasets, model=self.model)
         if fix_blend_flux is not None:
             for i, item in enumerate(fix_blend_flux):
@@ -472,3 +477,14 @@ def test_flux_indexing():
     print(test_6.my_func.fb_indices)
     assert test_6.my_func.fs_indices == [None, 4]
     assert test_6.my_func.fb_indices == [3, 5]
+
+def test_fspl_1():
+    datafiles = ['FSPL_par_Obs_1.pho', 'FSPL_par_Obs_2.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
+    fac = 0.01
+    comparison_dir = 'FSPL_1_{0}'.format(fac)
+    print(comparison_dir)
+    test = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, verbose=True)
+    test.run()

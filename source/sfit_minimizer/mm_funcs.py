@@ -34,66 +34,27 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         # must be carried out before initialize_fluxes()
         self.fs_indices = []
         self.fb_indices = []
+        n_params = len(self.parameters_to_fit)
         for dataset in self.event.datasets:
-            if len(self.fs_indices) == 0:
-                fs_index = len(self.parameters_to_fit)
-            else:
-                if self.fb_indices[-1] is not None:
-                    n = 2
-                else:
-                    n = 1
-
-                ind_num = -1
-                for j in self.fs_indices:
-                    if j is not None:
-                        if j > ind_num:
-                            ind_num = j
-
-                if ind_num < 0:
-                    if self.fb_indices[-1] is not None:
-                        fs_index = self.fb_indices[-1] + 1
-                    else:
-                        fs_index = len(self.parameters_to_fit)
-
-                else:
-                    fs_index = ind_num + n
-
+            fs_index = n_params
+            n_params += 1
             if dataset in self.event.fix_source_flux.keys():
                 if self.event.fix_source_flux[dataset] is not False:
                     fs_index = None
+                    n_params -= 1
 
             self.fs_indices.append(fs_index)
-            if len(self.fb_indices) == 0:
-                fb_index = len(self.parameters_to_fit)
-                if self.fs_indices[-1] is not None:
-                    fb_index += 1
 
-            else:
-                if self.fs_indices[-1] is not None:
-                    n = 2
-                else:
-                    n = 1
-
-                ind_num = -1
-                for j in self.fb_indices:
-                    if j is not None:
-                        if j > ind_num:
-                            ind_num = j
-
-                if ind_num < 0:
-                    if self.fs_indices[-1] is not None:
-                        fb_index = self.fs_indices[-1] + 1
-                    else:
-                        fb_index = len(self.parameters_to_fit)
-
-                else:
-                    fb_index = ind_num + n
-
+            fb_index = n_params
+            n_params += 1
             if dataset in self.event.fix_blend_flux.keys():
                 if self.event.fix_blend_flux[dataset] is not False:
                     fb_index = None
+                    n_params -= 1
 
             self.fb_indices.append(fb_index)
+
+        self.n_params = n_params
 
     def _initialize_fluxes(self, estimate_fluxes):
         # Set initial source fluxes
@@ -127,9 +88,11 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         """ Concatenate good points for all datasets into a single array with
         columns: Date, flux, err.
         """
+        self.data_len = []
         for i, dataset in enumerate(self.event.datasets):
             data = [dataset.time[dataset.good], dataset.flux[dataset.good],
                     dataset.err_flux[dataset.good]]
+            self.data_len.append(np.sum(dataset.good))
             if i == 0:
                 flattened_data = np.array(data)
             else:
@@ -182,55 +145,33 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         self.df.
 
         """
-        dfunc = None
-        n_fluxes = 0
+        data_indices = np.cumsum(self.data_len)
+        dfunc = np.zeros((self.n_params, data_indices[-1]))
         for i, fit in enumerate(self.event.fits):
-            n_fluxes_dataset = 0
+            # Indexes for the ith dataset
+            if i == 0:
+                ind_start = 0
+            else:
+                ind_start = data_indices[i - 1]
+
+            ind_stop = data_indices[i]
+
+            # Derivatives of ulens params
             dA_dparm = fit.get_d_A_d_params_for_point_lens_model(
-                self.parameters_to_fit)
-            dfunc_dataset = None
-            for j, key in enumerate(self.parameters_to_fit):
-                x = fit.source_flux * dA_dparm[key][fit.dataset.good]
-                if j == 0:
-                    dfunc_dataset = x
-                else:
-                    dfunc_dataset = np.vstack((dfunc_dataset, x))
+                   self.parameters_to_fit)
+            if len(self.parameters_to_fit) > 0:
+                for j, key in enumerate(self.parameters_to_fit):
+                    x = fit.source_flux * dA_dparm[key][fit.dataset.good]
+                    dfunc[j, ind_start:ind_stop] = x
 
-            # 1 x N
+            # Derivatives of flux parameters
             if self.fs_indices[i] is not None:
-                dfunc_df_source = np.array(
-                    [fit.get_data_magnification(bad=False)[fit.dataset.good]])
-                if dfunc_dataset is not None:
-                    dfunc_dataset = np.vstack((dfunc_dataset, dfunc_df_source))
-                else:
-                    dfunc_dataset = dfunc_df_source
-
-                n_fluxes_dataset += 1
+                 dfunc_df_source = np.array(
+                     [fit.get_data_magnification(bad=False)[fit.dataset.good]])
+                 dfunc[self.fs_indices[i], ind_start:ind_stop] = dfunc_df_source
 
             if self.fb_indices[i] is not None:
                 dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))
-                if dfunc_dataset is not None:
-                    dfunc_dataset = np.vstack((dfunc_dataset, dfunc_df_blend))
-                else:
-                    dfunc_dataset = dfunc_df_blend
-
-                n_fluxes_dataset += 1
-
-            # resulting shape should be M+2 x N
-            if (dfunc is None) and (dfunc_dataset is not None):
-                dfunc = dfunc_dataset
-            else:
-                # add columns of zeros for flux parameters for other datasets.
-                x = np.vstack(
-                    (dfunc_dataset[:len(self.parameters_to_fit), :],
-                        np.zeros( (n_fluxes, np.sum(fit.dataset.good)) )) )
-                # pad flux columns with zeros for datapoints from other datasets
-                y = np.hstack(
-                    (np.zeros( (n_fluxes_dataset, dfunc.shape[1]) ),
-                     dfunc_dataset[-n_fluxes_dataset:, :],) )
-                dfunc = np.hstack((dfunc, x))  # goes below existing
-                dfunc = np.vstack( (dfunc, y) )  # goes next to existing
-
-            n_fluxes += n_fluxes_dataset
+                dfunc[self.fb_indices[i], ind_start:ind_stop] = dfunc_df_blend
 
         self.df = dfunc

@@ -478,6 +478,23 @@ def test_flux_indexing():
     assert test_6.my_func.fs_indices == [None, 4]
     assert test_6.my_func.fb_indices == [3, 5]
 
+
+def test_flux_indexing_2():
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho', 'PSPL_2_Obs_1.pho']
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    fac = 0.01
+    comparison_dir = 'PSPL_1_{0}_fbzero'.format(fac)
+    print(comparison_dir)
+
+    test_7 = ComparisonTest(
+        datafiles=datafiles, comp_dir=comparison_dir,
+        parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 1.0, False],
+        fix_blend_flux=[False, 0.0, False], verbose=True)
+    print(test_7.my_func.fs_indices)
+    print(test_7.my_func.fb_indices)
+    assert test_7.my_func.fs_indices == [3, None, 5]
+    assert test_7.my_func.fb_indices == [4, None, 6]
+
 def test_fspl_1():
     datafiles = ['FSPL_par_Obs_1.pho', 'FSPL_par_Obs_2.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
@@ -488,3 +505,168 @@ def test_fspl_1():
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, verbose=True)
     test.run()
+
+def test_fixed_fluxes():
+    """Check that the calc_df works for a variety of cases."""
+    # datasets
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho', 'PSPL_2_Obs_1.pho']
+    datasets = []
+    n_data = []
+    for i, filename in enumerate(datafiles):
+        data = mm.MulensData(
+            file_name=os.path.join(data_path, filename), phot_fmt='mag')
+        n_data.append(len(data.time))
+        datasets.append(data)
+
+    print('MM.version', mm.__version__)
+    print('datasets', datasets)
+    print('n_data', n_data)
+
+    # model parameters
+    model_params = {'t_0': 8645.00000, 'u_0': 0.250000, 't_E': 25.2000}
+
+    def run_test(ulens=None, fix_source_flux=None, fix_blend_flux=None):
+        # Create PSPL Function object
+        if ulens:
+            parameters_to_fit = ['t_0', 'u_0', 't_E']
+            n_ulens = 3
+            initial_guess = [model_params[key] for key in parameters_to_fit]
+        else:
+            parameters_to_fit = []
+            n_ulens = 0
+            initial_guess = []
+
+        for i in range(len(datasets)):
+            if i != fix_source_flux:
+                initial_guess.append(1.0)
+
+            if i != fix_blend_flux:
+                initial_guess.append(0.0)
+
+        n_params = n_ulens + 2 * len(datasets)
+        if fix_source_flux is not None:
+            fix_source_flux_dict = {datasets[fix_source_flux]: 1.0}
+            n_params -= 1
+        else:
+            fix_source_flux_dict = None
+
+        if fix_blend_flux is not None:
+            fix_blend_flux_dict = {datasets[fix_blend_flux]: 0.0}
+            n_params -= 1
+        else:
+            fix_blend_flux_dict = None
+
+        print('initial guess', initial_guess)
+        event = mm.Event(
+            model=mm.Model(model_params), datasets=datasets,
+            fix_source_flux=fix_source_flux_dict,
+            fix_blend_flux=fix_blend_flux_dict)
+        print('fix_source_flux', event.fix_source_flux)
+        print('fix_blend_flux', event.fix_blend_flux)
+
+        my_func = sfit_minimizer.mm_funcs.PSPLFunction(
+            event, parameters_to_fit)
+        print('fs_indices', my_func.fs_indices)
+        print('fb_indices', my_func.fb_indices)
+        my_func._update_ulens_params(initial_guess)
+
+        # Run calc_df
+        my_func.calc_df()
+
+        # check the shape of df
+        assert my_func.df.shape == (n_params, np.sum(n_data))
+
+        # check that things that should be zero are zero
+        for i in range(len(datasets)):
+            if i == 0:
+                ind_i_0 = 0
+            else:
+                ind_i_0 = np.sum(n_data[0:i]).astype(int)
+
+            if i == (len(datasets) - 1):
+                ind_i_1 = np.sum(n_data).astype(int)
+            else:
+                ind_i_1 = np.sum(n_data[0:i + 1]).astype(int)
+
+            for j in range(len(datasets)):
+                print('i,j', i, j)
+                if j != i:
+                    # zeros for dataset i for flux parameters of dataset j
+                    if fix_source_flux != j:
+                        assert (
+                            np.sum(
+                                my_func.df[my_func.fs_indices[j], ind_i_0:ind_i_1]
+                            ) == 0)
+
+                    if fix_blend_flux != j:
+                        assert (
+                            np.sum(
+                                my_func.df[my_func.fb_indices[j], ind_i_0:ind_i_1]
+                            ) == 0)
+
+                else:
+                    # zeros for dataset i for flux parameters of dataset j
+                    if fix_source_flux != j:
+                        assert (
+                            np.sum(
+                                my_func.df[my_func.fs_indices[j], ind_i_0:ind_i_1]
+                            ) != 0)
+
+                    if fix_blend_flux != j:
+                        assert (
+                            np.sum(
+                                my_func.df[my_func.fb_indices[j], ind_i_0:ind_i_1]
+                            ) != 0)
+
+
+    # ulens parameters + 3 datasets
+    print('t1')
+    run_test(ulens=True)
+
+    # ulens parameters + fix source flux for dataset 1
+    print('t2')
+    run_test(ulens=True, fix_source_flux=0)
+
+    # ulens parameters + fix blend flux for dataset_1
+    print('t3')
+    run_test(ulens=True, fix_blend_flux=0)
+
+    # ulens parameters + fix both source and blend flux for dataset_1
+    print('t4')
+    run_test(ulens=True, fix_source_flux=0, fix_blend_flux=0)
+
+    # ulens parameters + fix both source and blend flux for dataset_2
+    print('t5')
+    run_test(ulens=True, fix_source_flux=1, fix_blend_flux=1)
+
+    # ulens parameters + fix both source and blend flux for dataset_3
+    print('t6')
+    run_test(ulens=True, fix_source_flux=2, fix_blend_flux=2)
+
+    # just fluxes
+    print('t7')
+    run_test(ulens=False)
+
+    # just fluxes but fix source flux for dataset_1
+    print('t8')
+    run_test(ulens=False, fix_source_flux=0)
+
+    # just fluxes but fix blend flux for dataset_1
+    print('t9')
+    run_test(ulens=False, fix_blend_flux=0)
+
+    # just fluxes but fix both source and blend flux for dataset_1
+    print('t10')
+    run_test(ulens=False, fix_source_flux=0, fix_blend_flux=0)
+
+    # just fluxes but fix both source and blend flux for dataset_3
+    print('t11')
+    run_test(ulens=False, fix_source_flux=1, fix_blend_flux=1)
+
+    # just fluxes but fix both source and blend flux for dataset_3
+    print('t12')
+    run_test(ulens=False, fix_source_flux=2, fix_blend_flux=2)
+
+    # just fluxes but fix source and blend flux for different datasets
+    print('t13')
+    run_test(ulens=False, fix_source_flux=2, fix_blend_flux=0)

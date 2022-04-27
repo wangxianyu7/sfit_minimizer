@@ -74,11 +74,23 @@ class ComparisonTest(object):
 
         self.datasets = []
         for i, filename in enumerate(datafiles):
+            if filename[0:2] == 'FS':
+                filestr = filename.split('.')
+                bandpass = filestr[0][-1]
+            else:
+                bandpass = None
+
             data = mm.MulensData(
-                file_name=os.path.join(data_path, filename), phot_fmt='mag')
+                file_name=os.path.join(data_path, filename), phot_fmt='mag',
+                bandpass=bandpass)
             self.datasets.append(data)
 
-            flux_guess = [1.0, 0.0]
+            if (9 + i * 3) >= len(self.matrices[0].a):
+                flux_guess = [1.0, 0.0]
+            else:
+                flux_guess = [self.matrices[0].a[9 + i * 3],
+                            self.matrices[0].a[9 + i * 3 + 1]]
+
             if isinstance(fix_blend_flux, list):
                 if isinstance(fix_blend_flux[i], float):
                     flux_guess.pop(1)
@@ -106,10 +118,15 @@ class ComparisonTest(object):
         if 'pi_E_N' in self.parameters_to_fit:
             self.model.parameters.t_0_par = self.initial_guess[0]
 
+        gammas = {'I': self.matrices[0].a[4],
+                  'V': self.matrices[0].a[5],
+                  'H': self.matrices[0].a[6]}
         if 'rho' in self.parameters_to_fit:
             self.model.set_magnification_methods([
                 self.model.parameters.t_0 - 1.5, 'finite_source_LD_Yoo04_direct',
                 self.model.parameters.t_0 + 1.5])
+            for band, value in gammas.items():
+                self.model.set_limb_coeff_gamma(band, value)
 
         self.event = mm.Event(datasets=self.datasets, model=self.model)
         if fix_blend_flux is not None:
@@ -216,6 +233,9 @@ class ComparisonTest(object):
             sfit_matrix.chi2 = [sfit_matrix.chi2]
 
         for i in range(len(self.datasets)):
+            print(
+                'chi2', i, sfit_matrix.chi2[i],
+                self.my_func.event.get_chi2_for_dataset(i))
             np.testing.assert_almost_equal(
                 np.sum(sfit_matrix.chi2[i]),
                 self.my_func.event.get_chi2_for_dataset(i), decimal=2)
@@ -496,7 +516,7 @@ def test_flux_indexing_2():
     assert test_7.my_func.fb_indices == [4, None, 6]
 
 def test_fspl_1():
-    datafiles = ['FSPL_par_Obs_1.pho', 'FSPL_par_Obs_2.pho']
+    datafiles = ['FSPL_Obs_1_I.pho', 'FSPL_Obs_2_V.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
     fac = 0.01
     comparison_dir = 'FSPL_1_{0}'.format(fac)

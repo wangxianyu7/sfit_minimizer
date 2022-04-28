@@ -122,9 +122,12 @@ class ComparisonTest(object):
                   'V': self.matrices[0].a[5],
                   'H': self.matrices[0].a[6]}
         if 'rho' in self.parameters_to_fit:
+            n_t_star = 30.
+            t_star = self.model.parameters.rho * self.model.parameters.t_E
             self.model.set_magnification_methods([
-                self.model.parameters.t_0 - 1.5, 'finite_source_LD_Yoo04_direct',
-                self.model.parameters.t_0 + 1.5])
+                self.model.parameters.t_0 - n_t_star * t_star,
+                'finite_source_LD_Yoo04_direct',
+                self.model.parameters.t_0 + n_t_star * t_star])
             for band, value in gammas.items():
                 self.model.set_limb_coeff_gamma(band, value)
 
@@ -181,7 +184,7 @@ class ComparisonTest(object):
         sigmas = self.my_func.get_sigmas()
         for i, value0 in enumerate(self.my_func.theta):
             # Step
-            np.testing.assert_almost_equal(self.my_func.step[i], 0.0, decimal=3)
+            np.testing.assert_allclose(self.my_func.step[i], 0.0, atol=0.001)
 
             # Value
             index = self._get_index(i)
@@ -210,7 +213,7 @@ class ComparisonTest(object):
 
         # d vector
         self._compare_vector(
-            self.my_func.dvec, sfit_matrix.d, verbose=self.verbose)
+            self.my_func.dvec, sfit_matrix.d, decimal=4, verbose=self.verbose)
 
         # c matrix
         cmat = sfit_matrix.c.reshape(shape)
@@ -233,12 +236,13 @@ class ComparisonTest(object):
             sfit_matrix.chi2 = [sfit_matrix.chi2]
 
         for i in range(len(self.datasets)):
-            print(
-                'chi2', i, sfit_matrix.chi2[i],
-                self.my_func.event.get_chi2_for_dataset(i))
-            np.testing.assert_almost_equal(
-                np.sum(sfit_matrix.chi2[i]),
-                self.my_func.event.get_chi2_for_dataset(i), decimal=2)
+            dataset_chi2 = self.my_func.event.get_chi2_for_dataset(i)
+            if dataset_chi2 < 10.:
+                np.testing.assert_allclose(
+                    np.sum(sfit_matrix.chi2[i]), dataset_chi2, atol=0.1)
+            else:
+                np.testing.assert_allclose(
+                    np.sum(sfit_matrix.chi2[i]),dataset_chi2, rtol=0.001)
 
     def _get_index(self, i):
         """
@@ -300,6 +304,8 @@ class ComparisonTest(object):
 
     def _compare_vector(
             self, my_vector, sfit_vector, decimal=5, verbose=False):
+        """ if my_vector is 0., uses an absolute tolerance of 10.^decimal.
+        Otherwise, uses a relative tolerance."""
         for i, value0 in enumerate(my_vector):
             index = self._get_index(i)
 
@@ -313,11 +319,11 @@ class ComparisonTest(object):
                 print(value, sfit_vector[index])
 
             if value != 0.0:
-                np.testing.assert_almost_equal(
-                    value / sfit_vector[index], 1., decimal=decimal)
+                np.testing.assert_allclose(
+                    value, sfit_vector[index], rtol=10.**(-decimal))
             else:
-                np.testing.assert_almost_equal(
-                    value,  sfit_vector[index], decimal=decimal)
+                np.testing.assert_allclose(
+                    value, sfit_vector[index], atol=10.**(-decimal))
 
     def _compare_matrix(self, my_matrix, sfit_matrix, verbose=False, decimal=5):
         n_elements = my_matrix.shape[0]
@@ -331,13 +337,13 @@ class ComparisonTest(object):
                     print(my_matrix[i, j], sfit_matrix[ind_i, ind_j])
 
                 if my_matrix[i, j] != 0.0:
-                    np.testing.assert_almost_equal(
-                        my_matrix[i, j] / sfit_matrix[ind_i, ind_j], 1.,
-                        decimal=decimal)
-                else:
-                    np.testing.assert_almost_equal(
+                    np.testing.assert_allclose(
                         my_matrix[i, j], sfit_matrix[ind_i, ind_j],
-                        decimal=decimal)
+                        rtol=10.**(-decimal))
+                else:
+                    np.testing.assert_allclose(
+                        my_matrix[i, j], sfit_matrix[ind_i, ind_j],
+                        atol=10.**(-decimal))
 
 
 def test_cmat():

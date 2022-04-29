@@ -6,6 +6,8 @@ import os.path
 import sfit_minimizer
 import MulensModel as mm
 
+import matplotlib.pyplot as plt
+
 """
 # Tests I need:
 
@@ -166,6 +168,19 @@ class ComparisonTest(object):
         for i in range(3):
             print('testing iteration', i)
             self.my_func.update_all(theta0=new_guess, verbose=self.verbose)
+            #if self.verbose:
+                #print(self.my_func.df.shape)
+                # for j in range(4):
+                #     plt.figure()
+                #     plt.title(j)
+                #     plt.scatter(
+                #         np.concatenate(
+                #             (self.my_func.event.datasets[0].time,
+                #              self.my_func.event.datasets[1].time)),
+                #         self.my_func.df[j, :])
+                #
+                # plt.show()
+
             self._compare_vector(
                 new_guess, self.matrices[i].a, decimal=2, verbose=self.verbose)
             self.compare_calcs(self.matrices[i])
@@ -419,7 +434,7 @@ def test_pspl_fbzero():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
-        verbose=True)
+        verbose=False)
     test.run()
 
 def test_pspl_fs_fixed():
@@ -431,7 +446,8 @@ def test_pspl_fs_fixed():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 2.1],
-        verbose=True)
+        verbose=False
+    )
     test.run()
 
 def test_pspl_Obs1_fixed():
@@ -444,7 +460,7 @@ def test_pspl_Obs1_fixed():
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_source_flux=[1.3, False],
         fix_blend_flux=[0.0, False],
-        verbose=True)
+        verbose=False)
     test.run()
 
 def test_flux_indexing():
@@ -457,7 +473,7 @@ def test_flux_indexing():
     test_1 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., False],
-        verbose=True)
+        verbose=False)
 
     assert test_1.my_func.fs_indices == [3, 4]
     assert test_1.my_func.fb_indices == [None, 5]
@@ -465,7 +481,7 @@ def test_flux_indexing():
     test_2 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[False, 0.],
-        verbose=True)
+        verbose=False)
 
     assert test_2.my_func.fs_indices == [3, 5]
     assert test_2.my_func.fb_indices == [4, None]
@@ -473,7 +489,7 @@ def test_flux_indexing():
     test_3 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[0., 0.],
-        verbose=True)
+        verbose=False)
 
     assert test_3.my_func.fs_indices == [3, 4]
     assert test_3.my_func.fb_indices == [None, None]
@@ -481,7 +497,7 @@ def test_flux_indexing():
     test_4 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_blend_flux=[False, False],
-        verbose=True)
+        verbose=False)
 
     assert test_4.my_func.fs_indices == [3, 5]
     assert test_4.my_func.fb_indices == [4, 6]
@@ -489,7 +505,7 @@ def test_flux_indexing():
     test_5 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 2.1],
-        verbose=True)
+        verbose=False)
 
     assert test_5.my_func.fs_indices == [3, None]
     assert test_5.my_func.fb_indices == [4, 5]
@@ -497,7 +513,7 @@ def test_flux_indexing():
     test_6 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_source_flux=[0.0, False],
-        verbose=True)
+        verbose=False)
 
     print(test_6.my_func.fs_indices)
     print(test_6.my_func.fb_indices)
@@ -515,7 +531,7 @@ def test_flux_indexing_2():
     test_7 = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, fix_source_flux=[False, 1.0, False],
-        fix_blend_flux=[False, 0.0, False], verbose=True)
+        fix_blend_flux=[False, 0.0, False], verbose=False)
     print(test_7.my_func.fs_indices)
     print(test_7.my_func.fb_indices)
     assert test_7.my_func.fs_indices == [3, None, 5]
@@ -530,6 +546,17 @@ def test_fspl_1():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, verbose=True)
+
+    # debugging code
+    # test.my_func._update_ulens_params(test.initial_guess)
+    # test.my_func.calc_df()
+    # import matplotlib.pyplot as plt
+    # for j in range(4):
+    #     plt.figure()
+    #     plt.title(j)
+    #     plt.scatter(test.my_func.data[:, 0], test.my_func.df[j, :])
+    # plt.show()
+
     test.run()
 
 def test_fixed_fluxes():

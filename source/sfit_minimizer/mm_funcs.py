@@ -156,7 +156,6 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
             ind_stop = data_indices[i]
 
-            print('i, source_flux', i, fit.source_flux)
             # Derivatives of ulens params
             dA_dparm = fit.get_d_A_d_params_for_point_lens_model(
                    self.parameters_to_fit)

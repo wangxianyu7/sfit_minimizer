@@ -9,22 +9,15 @@ from matplotlib import gridspec
 data_path = os.path.join(sfit_minimizer.DATA_PATH, 'MMTest')
 datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
 datasets = []
-fix_source_flux = {}
-fix_blend_flux = {}
 for filename in datafiles:
     data = mm.MulensData(
         file_name=os.path.join(data_path, filename), phot_fmt='mag')
     datasets.append(data)
-    fix_source_flux[data] = 1.0
-    fix_blend_flux[data] = 0.0
 
 datasets.append(datasets[-1])
 
 model = mm.Model({'t_0': 8650., 'u_0': 0.30000, 't_E': 25.00000})
-event = mm.Event(
-    datasets=datasets, model=model,
-    fix_source_flux=fix_source_flux,
-    fix_blend_flux=fix_blend_flux)
+event = mm.Event(datasets=datasets, model=model)
 
 parameters_to_fit = ['t_0', 'u_0', 't_E']
 initial_guess = []

@@ -31,7 +31,7 @@ n_t_star = 10.
 t_star = model.parameters.rho * model.parameters.t_E
 model.set_magnification_methods([
     model.parameters.t_0 - n_t_star * t_star,
-    'finite_source_LD_Yoo04_direct',
+    'finite_source_LD_Yoo04',
     model.parameters.t_0 + n_t_star * t_star])
 for band, value in gammas.items():
     model.set_limb_coeff_gamma(band, value)
@@ -42,13 +42,11 @@ print(model)
 parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
 initial_guess = [2451697.19995,  0.00600, 25.00000,  0.00650, 1.30000,  0.00000,
                  1.00000,  0.00000]
-#parameters_to_fit = []
-#initial_guess = [1.30000,  0.00000, 1.00000,  0.00000]
 
 my_func = sfit_minimizer.mm_funcs.PSPLFunction(event, parameters_to_fit)
 
 result = sfit_minimizer.minimize(
-    my_func, x0=initial_guess, tol=1e-3, max_iter=100,
+    my_func, x0=initial_guess, tol=1e-4,
     options={'step': 'adaptive'}, verbose=True)
 
 print('Full Results:')
@@ -64,15 +62,24 @@ print(sigmas)
 my_func.update_all(values)
 print('chi2: ', my_func.chi2)
 
-# # Plot results
-# gs = gridspec.GridSpec(2, 1, height_ratios=[5, 1])
-# plt.figure()
-# ax11 = plt.subplot(gs[0])
-# my_func.event.plot_model(subtract_2450000=True)
-# my_func.event.plot_data(subtract_2450000=True)
-# plt.title('Data and Fitted Model (Default)')
-# # Plot the residuals
-# plt.subplot(gs[1], sharex=ax11)
-# my_func.event.plot_residuals(subtract_2450000=True)
-#
-# plt.show()
+# Plot results
+gs = gridspec.GridSpec(2, 1, height_ratios=[5, 1])
+plt.figure()
+ax11 = plt.subplot(gs[0])
+plt.title('Data and Fitted Model (Default)')
+my_func.event.plot_model(
+    t_range=[(model.parameters.t_0 - 3*t_star), (model.parameters.t_0 + 3*t_star)],
+    subtract_2450000=True, bandpass='I', label='I', color='red')
+my_func.event.plot_model(
+    t_range=[(model.parameters.t_0 - 3*t_star), (model.parameters.t_0 + 3*t_star)],
+    subtract_2450000=True, bandpass='V', label='V', color='blue')
+my_func.event.plot_data(subtract_2450000=True)
+plt.ylim(13.5,11.5)
+# Plot the residuals
+plt.subplot(gs[1], sharex=ax11)
+my_func.event.plot_residuals(subtract_2450000=True)
+plt.xlim((model.parameters.t_0 - 2.*t_star - 2450000.),
+         (model.parameters.t_0 + 2.*t_star - 2450000.))
+
+
+plt.show()

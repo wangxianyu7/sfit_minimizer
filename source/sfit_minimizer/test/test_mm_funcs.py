@@ -128,7 +128,7 @@ class ComparisonTest(object):
             t_star = self.model.parameters.rho * self.model.parameters.t_E
             self.model.set_magnification_methods([
                 self.model.parameters.t_0 - n_t_star * t_star,
-                'finite_source_LD_Yoo04_direct',
+                'finite_source_LD_Yoo04',
                 self.model.parameters.t_0 + n_t_star * t_star])
             for band, value in gammas.items():
                 self.model.set_limb_coeff_gamma(band, value)
@@ -566,9 +566,8 @@ def test_fspl_1():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, n_t_star=100,
-        verbose=True)
+        verbose=False)
     test.test_3_iterations()
-
 
 def test_fixed_fluxes():
     """Check that the calc_df works for a variety of cases."""

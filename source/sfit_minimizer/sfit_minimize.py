@@ -1,5 +1,5 @@
 from sfit_minimizer.sfit_classes import SFitResults
-
+import time
 
 def set_initial_step_size(options):
     """
@@ -85,6 +85,7 @@ def minimize(
                 '[new params]', 'i'))
         print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
                 old_chi2, sfit_obj.chi2, sfit_obj.step, fac, x_old, None, -1))
+        start = time.time()
 
     for i in range(max_iter):
         # print('minimize steps', x_old, fac, sfit_obj.step)
@@ -94,6 +95,9 @@ def minimize(
         if verbose:
             print('{6} {0:16.4f} {1:16.4f} {2} {3}\n{4}\n{5}\n'.format(
                 old_chi2, sfit_obj.chi2, sfit_obj.step, fac, x_old, x_new, i))
+            stop = time.time()
+            print('step runtime (s): ', stop - start)
+            start = time.time()
 
         if options['step'] == 'adaptive':
             if old_chi2 - sfit_obj.chi2 < 1.0:

@@ -327,7 +327,7 @@ class ComparisonTest(object):
             else:
                 value = value0
 
-            if np.abs(value) > 10.e-7:
+            if np.abs(value) > 10.e-6:
                 np.testing.assert_allclose(
                     value, sfit_vector[index], rtol=rtol)
             else:
@@ -365,7 +365,7 @@ class ComparisonTest(object):
                         if self.parameters_to_fit[j] == 'rho':
                             rtol = 0.05
 
-                if np.abs(my_matrix[i, j]) > 10e-7:
+                if np.abs(my_matrix[i, j]) > 10e-6:
                     np.testing.assert_allclose(
                         my_matrix[i, j], sfit_matrix[ind_i, ind_j],
                         rtol=rtol)
@@ -566,7 +566,7 @@ def test_fspl_1():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit, n_t_star=100,
-        verbose=False)
+        verbose=True)
     test.test_3_iterations()
 
 

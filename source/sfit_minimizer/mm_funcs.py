@@ -167,7 +167,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
             # Derivatives of flux parameters
             if self.fs_indices[i] is not None:
                  dfunc_df_source = np.array(
-                     [fit.get_data_magnification(bad=False)[fit.dataset.good]])
+                     [fit.data_magnification[fit.dataset.good]])
                  dfunc[self.fs_indices[i], ind_start:ind_stop] = dfunc_df_source
 
             if self.fb_indices[i] is not None:

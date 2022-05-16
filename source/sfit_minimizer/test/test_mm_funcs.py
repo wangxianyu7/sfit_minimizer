@@ -182,6 +182,18 @@ class ComparisonTest(object):
 
         assert result.success
 
+        if self.verbose:
+            print('mine/sfit')
+            print('chi2')
+            print(self.my_func.chi2)
+            print(self.sfit_results.chi2)
+            print('a:')
+            print(self.my_func.theta)
+            print(self.sfit_results.a)
+            print('sigma:')
+            print(self.my_func.get_sigmas())
+            print(self.sfit_results.s)
+
         self.compare_chi2(self.sfit_results)
 
         sigmas = self.my_func.get_sigmas()
@@ -196,8 +208,14 @@ class ComparisonTest(object):
             else:
                 value = value0
 
-            assert(
-                np.abs(value - self.sfit_results.a[index]) < 0.05 * sigmas[i])
+            #assert(
+            #    np.abs(value - self.sfit_results.a[index]) < 0.05 * sigmas[i])
+            if np.abs(sigmas[i]) > 1e-4:
+                np.testing.assert_allclose(
+                    value, self.sfit_results.a[index], atol=0.05*sigmas[i])
+            else:
+                np.testing.assert_allclose(
+                    value, self.sfit_results.a[index], atol=2e-5)
 
         # sigmas
         self._compare_vector(
@@ -568,6 +586,7 @@ def test_fspl_1():
         parameters_to_fit=parameters_to_fit, n_t_star=100,
         verbose=False)
     test.test_3_iterations()
+    test.test_final_results()
 
 def test_fixed_fluxes():
     """Check that the calc_df works for a variety of cases."""

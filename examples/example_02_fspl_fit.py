@@ -27,7 +27,7 @@ gammas = {'I': 0.44,
           'V': 0.72,
           'H': 0.26}
 model = mm.Model({'t_0': 2451697.2, 'u_0': 0.00600, 't_E': 25.00000, 'rho': 0.0065})
-n_t_star = 10.
+n_t_star = 100.
 t_star = model.parameters.rho * model.parameters.t_E
 model.set_magnification_methods([
     model.parameters.t_0 - n_t_star * t_star,
@@ -58,6 +58,11 @@ print('results: ')
 print(values)
 print('+/-')
 print(sigmas)
+# These values do not match the sfit results, e.g., sigma_tE is different by a
+# factor of 2. Increasing n_t_star to 20 increased the run time by a factor of
+# 20, but did not solve the issue. This was because it was calculating the
+# finite source effects at large z directly. I have changed the calculation to
+# be my file, which allows integration to z=9900.
 
 my_func.update_all(values)
 print('chi2: ', my_func.chi2)

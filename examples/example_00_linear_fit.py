@@ -1,12 +1,13 @@
+"""
+Example of fitting a polynomial of the form y = m * x + b to some data.
+"""
 import sfit_minimizer
 import matplotlib.pyplot as plt
 import numpy as np
 import os.path
 
-"""
-Example of fitting a polynomial of the form y = m * x + b to some data.
-"""
 
+# User defines a fitting function that inherits from SFitFunction
 class LinearFunction(sfit_minimizer.SFitFunction):
 
     def __init__(self, data=None, theta=None):
@@ -31,14 +32,19 @@ class LinearFunction(sfit_minimizer.SFitFunction):
         self.df = np.array(df)
 
 
-data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
+# Load the data
+my_data = np.loadtxt(os.path.join(
+    sfit_minimizer.DATA_PATH,
+    'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
+
+# Setup and run the fit
 initial_guess = [4, 2.1]  # Wrong initial condition
-my_func = LinearFunction(data=data)
-
+my_func = LinearFunction(data=my_data)
 result = sfit_minimizer.minimize(
-    my_func, x0=initial_guess, tol=1e-7,
-    options={'step': 'adaptive'}, verbose=True)
+    my_func, x0=initial_guess, tol=1e-7, options={'step': 'adaptive'},
+    verbose=True)
 
+# Print the results
 print('\nFull Results:')
 print(result)
 print('\n')
@@ -53,6 +59,7 @@ print(sigmas)
 my_func.update_all(values)
 print('chi2: ', my_func.chi2)
 
+# Plot the results
 plt.figure()
 plt.title('Values')
 plt.errorbar(

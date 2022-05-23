@@ -36,7 +36,7 @@ for i in range(len(datasets)):
     initial_guess.append(1.0)
     initial_guess.append(0.0)
 
-my_func = sfit_minimizer.mm_funcs.PSPLFunction(event, parameters_to_fit)
+my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(event, parameters_to_fit)
 
 # Do the fit
 result = sfit_minimizer.minimize(

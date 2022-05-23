@@ -144,7 +144,7 @@ class ComparisonTest(object):
                 if item is not False:
                     self.event.fix_source_flux[self.datasets[i]] = item
 
-        self.my_func = sfit_minimizer.mm_funcs.PSPLFunction(
+        self.my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
             self.event, self.parameters_to_fit)
 
         self.verbose = verbose
@@ -576,6 +576,9 @@ def test_flux_indexing_2():
 
 def test_fspl_1():
     """ Test that the FSPL gradient calculation is very accurate."""
+    if int(mm.__version__.split('.')[0]) < 3:
+        print('Finite Source gradient will be implemented in MulensModel v3.')
+
     datafiles = ['FSPL_Obs_1_I.pho', 'FSPL_Obs_2_V.pho']
     parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
     fac = 0.01
@@ -646,7 +649,7 @@ def test_fixed_fluxes():
         print('fix_source_flux', event.fix_source_flux)
         print('fix_blend_flux', event.fix_blend_flux)
 
-        my_func = sfit_minimizer.mm_funcs.PSPLFunction(
+        my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
             event, parameters_to_fit)
         print('fs_indices', my_func.fs_indices)
         print('fb_indices', my_func.fb_indices)

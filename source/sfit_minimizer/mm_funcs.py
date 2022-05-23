@@ -2,7 +2,7 @@ import numpy as np
 import sfit_minimizer
 
 
-class PSPLFunction(sfit_minimizer.SFitFunction):
+class PointLensSFitFunction(sfit_minimizer.SFitFunction):
     """
     A class for fitting a point-source point-lens microlensing light curve to
     observed data using :py:func:`sfit_minimizer.sfit_minimize.minimize()`.
@@ -27,7 +27,7 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         self.parameters_to_fit = parameters_to_fit
         self._set_flux_indices()
         self._initialize_fluxes(estimate_fluxes)
-        flattened_data = self.flatten_data()
+        flattened_data = self._flatten_data()
         sfit_minimizer.SFitFunction.__init__(self, data=flattened_data)
 
     def _set_flux_indices(self):
@@ -84,11 +84,12 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
         self.event.fix_source_flux = fix_source_flux
         self.event.fix_blend_flux = fix_blend_flux
 
-    def flatten_data(self):
+    def _flatten_data(self):
         """ Concatenate good points for all datasets into a single array with
         columns: Date, flux, err.
         """
         self.data_len = []
+        flattened_data = []
         for i, dataset in enumerate(self.event.datasets):
             data = [dataset.time[dataset.good], dataset.flux[dataset.good],
                     dataset.err_flux[dataset.good]]
@@ -115,20 +116,21 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
         self.event.fit_fluxes(bad=False)
 
-    def update_all(self, theta0=None, verbose=False):
-        if theta0 is None:
-            raise ValueError('theta0 must be passed to update_all()')
+    def update_all(self, theta=None, verbose=False):
+        if theta is None:
+            raise ValueError('theta must be passed to update_all()')
 
-        self._update_ulens_params(theta0)
+        self._update_ulens_params(theta)
 
         if verbose:
-            print('new value:', theta0)
+            print('new value:', theta)
             print('fluxes:', self.event.fluxes)
 
-        sfit_minimizer.SFitFunction.update_all(self, theta0, verbose=verbose)
+        sfit_minimizer.SFitFunction.update_all(self, theta, verbose=verbose)
 
     def calc_residuals(self):
         """Calculate expected values of the residuals"""
+        res = []
         for i, fit in enumerate(self.event.fits):
             res_dataset = fit.get_residuals(phot_fmt='flux', bad=False)
             if i == 0:
@@ -166,9 +168,9 @@ class PSPLFunction(sfit_minimizer.SFitFunction):
 
             # Derivatives of flux parameters
             if self.fs_indices[i] is not None:
-                 dfunc_df_source = np.array(
-                     [fit.data_magnification[fit.dataset.good]])
-                 dfunc[self.fs_indices[i], ind_start:ind_stop] = dfunc_df_source
+                dfunc_df_source = np.array(
+                    [fit.data_magnification[fit.dataset.good]])
+                dfunc[self.fs_indices[i], ind_start:ind_stop] = dfunc_df_source
 
             if self.fb_indices[i] is not None:
                 dfunc_df_blend = np.ones((1, np.sum(fit.dataset.good)))

@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   sfit_minimizer.mm_funcs
    sfit_minimizer.sfit_classes
    sfit_minimizer.sfit_minimize
    sfit_minimizer.version

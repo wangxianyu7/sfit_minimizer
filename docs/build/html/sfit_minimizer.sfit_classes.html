@@ -148,7 +148,8 @@ evaluated at data[k, 0].</p>
 <span class="sig-name descname"><span class="pre">calc_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>FUNCTION SPECIFIC: Calculate expected values of the model. May
 be explicitly defined for a specific class that inherits
-SFitFunction.</p>
+SFitFunction. Only used to calculate <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.ymod" title="sfit_minimizer.sfit_classes.SFitFunction.ymod"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ymod</span></code></a>, so
+<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_residuals" title="sfit_minimizer.sfit_classes.SFitFunction.calc_residuals"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_residuals()</span></code></a> may be defined instead.</p>
 <p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.ymod" title="sfit_minimizer.sfit_classes.SFitFunction.ymod"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ymod</span></code></a></p>
 </dd></dl>
 
@@ -162,8 +163,8 @@ k = :py:attr: data[k, 1] - <cite>~ymod</cite> [k]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="sfit_minimizer.sfit_classes.SFitFunction.calc_residuals">
 <span class="sig-name descname"><span class="pre">calc_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_residuals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Difference between the data and the model. Either this or
-calc_model() should be explicitly defined for a specific
+<dd><p>Difference between the data and the model. Either this OR
+<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.calc_model" title="sfit_minimizer.sfit_classes.SFitFunction.calc_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_model()</span></code></a> should be explicitly defined for a specific
 class that inherits SFitFunction.</p>
 <p>sets <a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.residuals" title="sfit_minimizer.sfit_classes.SFitFunction.residuals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">residuals</span></code></a></p>
 </dd></dl>

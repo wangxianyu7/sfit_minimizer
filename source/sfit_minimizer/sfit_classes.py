@@ -235,7 +235,8 @@ class SFitFunction(object):
         """
         FUNCTION SPECIFIC: Calculate expected values of the model. May
         be explicitly defined for a specific class that inherits
-        SFitFunction.
+        SFitFunction. Only used to calculate :py:attr:`~ymod`, so
+        :py:func:`~calc_residuals()` may be defined instead.
 
         sets :py:attr:`~ymod`
 
@@ -268,8 +269,8 @@ class SFitFunction(object):
 
     def calc_residuals(self):
         """
-        Difference between the data and the model. Either this or
-        calc_model() should be explicitly defined for a specific
+        Difference between the data and the model. Either this OR
+        :py:func:`~calc_model()` should be explicitly defined for a specific
         class that inherits SFitFunction.
 
         sets :py:attr:`~residuals`

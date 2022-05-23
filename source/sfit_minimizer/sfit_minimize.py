@@ -1,6 +1,7 @@
 from sfit_minimizer.sfit_classes import SFitResults
 import time
 
+
 def set_initial_step_size(options):
     """
     Set the step size for the :py:func:`~minimize` function.

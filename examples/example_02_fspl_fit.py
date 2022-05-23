@@ -52,7 +52,7 @@ parameters_to_fit = ['t_0', 'u_0', 't_E', 'rho']
 initial_guess = [2451697.19995,  0.00600, 25.00000,  0.00650, 1.30000,  0.00000,
                  1.00000,  0.00000]
 
-my_func = sfit_minimizer.mm_funcs.PSPLFunction(event, parameters_to_fit)
+my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(event, parameters_to_fit)
 
 # Do the fit
 result = sfit_minimizer.minimize(

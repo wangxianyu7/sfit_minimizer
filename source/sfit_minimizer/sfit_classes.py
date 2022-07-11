@@ -348,7 +348,7 @@ class SFitFunction(object):
         sets :py:attr:`~df`
         """
         raise NotImplementedError(
-            'User must define calc_model() for a child class of SFitFunction.')
+            'User must define calc_df() for a child class of SFitFunction.')
 
     # Sigmas
     @property

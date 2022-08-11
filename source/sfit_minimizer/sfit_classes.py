@@ -156,7 +156,7 @@ class SFitFunction(object):
                     'Type: {0}'.format(type(value))
                 )
 
-    def update_all(self, theta0=None, verbose=False):
+    def update_all(self, theta=None, verbose=False):
         """
         Recalculate all of the data properties with respect to the new model
         parameters.
@@ -171,9 +171,9 @@ class SFitFunction(object):
                 debugging.
 
         """
-        if theta0 is not None:
+        if theta is not None:
             self.reset_all()
-            self.theta = theta0
+            self.theta = theta
 
         self.calc_residuals()
         if verbose:

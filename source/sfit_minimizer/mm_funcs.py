@@ -101,18 +101,18 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
 
         return flattened_data.transpose()
 
-    def _update_ulens_params(self, theta0):
-        self._theta = theta0
+    def _update_ulens_params(self, theta):
+        self._theta = theta
 
         for (key, val) in enumerate(self.parameters_to_fit):
-            setattr(self.event.model.parameters, val, theta0[key])
+            setattr(self.event.model.parameters, val, theta[key])
 
         for i, dataset in enumerate(self.event.datasets):
             if self.fs_indices[i] is not None:
-                self.event.fix_source_flux[dataset] = theta0[self.fs_indices[i]]
+                self.event.fix_source_flux[dataset] = theta[self.fs_indices[i]]
 
             if self.fb_indices[i] is not None:
-                self.event.fix_blend_flux[dataset] = theta0[self.fb_indices[i]]
+                self.event.fix_blend_flux[dataset] = theta[self.fb_indices[i]]
 
         self.event.fit_fluxes(bad=False)
 

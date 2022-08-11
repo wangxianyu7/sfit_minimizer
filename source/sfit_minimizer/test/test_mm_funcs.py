@@ -167,7 +167,7 @@ class ComparisonTest(object):
         new_guess = self.initial_guess
         for i in range(3):
             print('testing iteration', i)
-            self.my_func.update_all(theta0=new_guess, verbose=self.verbose)
+            self.my_func.update_all(theta=new_guess, verbose=self.verbose)
 
             self._compare_vector(
                 new_guess, self.matrices[i].a, decimal=2, verbose=self.verbose)
@@ -401,7 +401,7 @@ def test_cmat():
     test = ComparisonTest(
         datafiles=datafiles, comp_dir=comparison_dir,
         parameters_to_fit=parameters_to_fit)
-    test.my_func.update_all(theta0=test.initial_guess)
+    test.my_func.update_all(theta=test.initial_guess)
 
     n_elements = int(np.sqrt(len(test.matrices[0].c)))
     shape = (n_elements, n_elements)

@@ -178,6 +178,9 @@ class SFitFunction(object):
         self.calc_residuals()
         if verbose:
             print('residuals', self.residuals)
+            print('res min/max',
+                  np.min(self.residuals), np.max(self.residuals),
+                  np.max(np.abs(self.residuals)))
 
         self.calc_chi2()
         if verbose:
@@ -198,6 +201,8 @@ class SFitFunction(object):
         self.calc_bmat()
         if verbose:
             print('bmat', self.bmat)
+            print('bmat finite vs. shape:',
+                  np.sum(np.isfinite((self.bmat))), self.bmat.shape)
 
         self.calc_cmat()
         if verbose:

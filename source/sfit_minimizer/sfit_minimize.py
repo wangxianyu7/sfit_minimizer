@@ -77,7 +77,7 @@ def minimize(
 
     (fac, options) = set_initial_step_size(options)
 
-    sfit_obj.update_all(x0)
+    sfit_obj.update_all(x0, verbose=verbose)
     old_chi2 = sfit_obj.chi2
     x_old = x0
     if verbose:

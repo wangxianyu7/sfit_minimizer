@@ -17,16 +17,37 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
             list of the named model parameters to be fit. (Not including the
             fluxes.)
 
-    Note: if you want to fix the source or blend flux for a particular dataset,
+    Notes:
+        1. if you want to fix the source or blend flux for a particular dataset,
     use the *fix_source_flux* or *fix_blend_flux* keywords in *event* as usual.
+
+        2. If u_0 is a parameter of the fit and it is too close to zero,
+    the matrix inversion will fail (produce
+    numpy.linalg.LinAlgError: Singular matrix). So if you see this error, check
+    the value of u_0. (Probably true of other parameters as well)
 
     """
 
-    def __init__(self, event, parameters_to_fit, estimate_fluxes=False):
+    def __init__(
+            self, event, parameters_to_fit, estimate_fluxes=False,
+            add_2450000=False):
         self.event = event
         self.parameters_to_fit = parameters_to_fit
         self._set_flux_indices()
         self._initialize_fluxes(estimate_fluxes)
+        self.flatten_data()
+        self._add_2450000 = add_2450000
+
+    @property
+    def add_2450000(self):
+        """
+        *bool*
+
+        if True: add 2450000 to theta[t_0] before putting it in the model.
+        """
+        return self._add_2450000
+
+    def flatten_data(self):
         flattened_data = self._flatten_data()
         sfit_minimizer.SFitFunction.__init__(self, data=flattened_data)
 
@@ -105,7 +126,12 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         self._theta = theta
 
         for (key, val) in enumerate(self.parameters_to_fit):
-            setattr(self.event.model.parameters, val, theta[key])
+            if (val == 't_0') and self.add_2450000:
+                setattr(
+                    self.event.model.parameters, val, theta[key] + 2450000.)
+            else:
+                setattr(self.event.model.parameters, val, theta[key])
+
 
         for i, dataset in enumerate(self.event.datasets):
             if self.fs_indices[i] is not None:
@@ -125,6 +151,7 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         if verbose:
             print('new value:', theta)
             print('fluxes:', self.event.fluxes)
+            print('model:', self.event.model)
 
         sfit_minimizer.SFitFunction.update_all(self, theta, verbose=verbose)
 

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sfit_minimizer
 
 
-def fit_ulens_event(event, parameters_to_fit=None, plot=False):
+def fit_mulens_event(event, parameters_to_fit=None, plot=False):
     # Setup the fitting
     if parameters_to_fit is None:
         parameters_to_fit = event.model.parameters.parameters.keys()

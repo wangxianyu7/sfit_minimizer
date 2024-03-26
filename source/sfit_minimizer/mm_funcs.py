@@ -237,7 +237,7 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
                    self.parameters_to_fit)
             if len(self.parameters_to_fit) > 0:
                 for j, key in enumerate(self.parameters_to_fit):
-                    x = fit.source_flux * dA_dparm[key][fit.dataset.good]
+                    x = fit.source_flux * dA_dparm[key]
                     dfunc[j, ind_start:ind_stop] = x
 
             # Derivatives of flux parameters

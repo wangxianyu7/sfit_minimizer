@@ -1,5 +1,52 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import sfit_minimizer
+
+
+def fit_ulens_event(event, parameters_to_fit=None, plot=False):
+    # Setup the fitting
+    if parameters_to_fit is None:
+        parameters_to_fit = event.model.parameters.parameters.keys()
+
+    initial_guess = []
+    for key in parameters_to_fit:
+        if key == 't_E':
+            initial_guess.append(event.model.parameters.parameters[key].value)
+        else:
+            initial_guess.append(event.model.parameters.parameters[key])
+
+    for i in range(len(event.datasets)):
+        initial_guess.append(1.0)
+        initial_guess.append(0.0)
+
+    my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
+        event, parameters_to_fit)
+
+    # Do the fit
+    result = sfit_minimizer.minimize(
+        my_func, x0=initial_guess, tol=1e-5,
+        options={'step': 'adaptive'}, verbose=True)
+
+    # Print the results
+    print('Full Results:')
+    print(result)
+
+    values = result.x
+    sigmas = result.sigmas
+    print('results: ')
+    print(values)
+    print('+/-')
+    print(sigmas)
+
+    my_func.update_all(values)
+    print('chi2: ', my_func.chi2)
+
+    if plot:
+        # Plot results
+        my_func.event.plot(subtract_2450000=True)
+        plt.show()
+
+    return results
 
 
 class PointLensSFitFunction(sfit_minimizer.SFitFunction):

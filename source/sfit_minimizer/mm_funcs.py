@@ -3,21 +3,26 @@ import matplotlib.pyplot as plt
 import sfit_minimizer
 
 
-def fit_mulens_event(event, parameters_to_fit=None, plot=False):
+def fit_mulens_event(
+        event, parameters_to_fit=None, initial_guess=None, plot=False):
     # Setup the fitting
     if parameters_to_fit is None:
         parameters_to_fit = event.model.parameters.parameters.keys()
 
-    initial_guess = []
-    for key in parameters_to_fit:
-        if key == 't_E':
-            initial_guess.append(event.model.parameters.parameters[key].value)
-        else:
-            initial_guess.append(event.model.parameters.parameters[key])
+    if initial_guess is None:
+        initial_guess = []
+        for key in parameters_to_fit:
+            if key == 't_E':
+                initial_guess.append(event.model.parameters.parameters[key].value)
+            else:
+                initial_guess.append(event.model.parameters.parameters[key])
 
-    for i in range(len(event.datasets)):
-        initial_guess.append(1.0)
-        initial_guess.append(0.0)
+        event.fit_fluxes()
+        source_fluxes = event.source_fluxes
+        blend_fluxes = event.blend_fluxes
+        for i in range(len(event.datasets)):
+            initial_guess.append(source_fluxes[i][0])
+            initial_guess.append(blend_fluxes[i])
 
     my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
         event, parameters_to_fit)
@@ -42,11 +47,16 @@ def fit_mulens_event(event, parameters_to_fit=None, plot=False):
     print('chi2: ', my_func.chi2)
 
     if plot:
+        if my_func.event.model.parameters.t_0 > 2000000:
+            subtract_2450000 = True
+        else:
+            subtract_2450000 = False
+
         # Plot results
-        my_func.event.plot(subtract_2450000=True)
+        my_func.event.plot(subtract_2450000=subtract_2450000, show_bad=True)
         plt.show()
 
-    return results
+    return result
 
 
 class PointLensSFitFunction(sfit_minimizer.SFitFunction):
@@ -80,8 +90,13 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
             add_2450000=False):
         self.event = event
         self.parameters_to_fit = parameters_to_fit
-        self._set_flux_indices()
+
+        self.fs_indices = None
+        self.fb_indices = None
+        self.n_params = None
+        self.set_flux_indices()
         self._initialize_fluxes(estimate_fluxes)
+
         self.flatten_data()
         self._add_2450000 = add_2450000
 
@@ -98,7 +113,7 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         flattened_data = self._flatten_data()
         sfit_minimizer.SFitFunction.__init__(self, data=flattened_data)
 
-    def _set_flux_indices(self):
+    def set_flux_indices(self):
         # must be carried out before initialize_fluxes()
         self.fs_indices = []
         self.fb_indices = []

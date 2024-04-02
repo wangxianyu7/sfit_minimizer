@@ -97,6 +97,7 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         self.set_flux_indices()
         self._initialize_fluxes(estimate_fluxes)
 
+        self.data_len = None
         self.flatten_data()
         self._add_2450000 = add_2450000
 

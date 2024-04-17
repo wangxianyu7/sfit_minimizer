@@ -4,7 +4,8 @@ import sfit_minimizer
 
 
 def fit_mulens_event(
-        event, parameters_to_fit=None, initial_guess=None, plot=False):
+        event, parameters_to_fit=None, initial_guess=None, plot=False,
+        verbose=False):
     # Setup the fitting
     if parameters_to_fit is None:
         parameters_to_fit = event.model.parameters.parameters.keys()
@@ -30,21 +31,22 @@ def fit_mulens_event(
     # Do the fit
     result = sfit_minimizer.minimize(
         my_func, x0=initial_guess, tol=1e-5,
-        options={'step': 'adaptive'}, verbose=True)
-
-    # Print the results
-    print('Full Results:')
-    print(result)
+        options={'step': 'adaptive'}, verbose=verbose)
 
     values = result.x
     sigmas = result.sigmas
-    print('results: ')
-    print(values)
-    print('+/-')
-    print(sigmas)
+    if verbose:
+        # Print the results
+        print('Full Results:')
+        print(result)
+        print('results: ')
+        print(values)
+        print('+/-')
+        print(sigmas)
 
     my_func.update_all(values)
-    print('chi2: ', my_func.chi2)
+    if verbose:
+        print('chi2: ', my_func.chi2)
 
     if plot:
         if my_func.event.model.parameters.t_0 > 2000000:

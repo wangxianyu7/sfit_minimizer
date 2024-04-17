@@ -758,3 +758,31 @@ def test_fixed_fluxes():
     # just fluxes but fix source and blend flux for different datasets
     print('t13')
     run_test(ulens=False, fix_source_flux=2, fix_blend_flux=0)
+
+
+def test_fit_mulens_event():
+    """
+    Test that fitting perfect data results in a valid answer.
+    """
+    # Truth
+    expected = {'t_0': 8645.00000, 'u_0': 0.250000, 't_E': 25.2000}
+
+    # Read in the data:
+    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
+    datasets = []
+    for filename in datafiles:
+        data = mm.MulensData(
+            file_name=os.path.join(data_path, filename), phot_fmt='mag')
+        datasets.append(data)
+
+    # Create the model and event objects
+    model = mm.Model({'t_0': 8650., 'u_0': 0.30000, 't_E': 25.00000})
+    event = mm.Event(datasets=datasets, model=model)
+
+    parameters_to_fit = ['t_0', 'u_0', 't_E']
+    results = sfit_minimizer.fit_mulens_event(
+        event=event, parameters_to_fit=parameters_to_fit, verbose=False)
+
+    for i, parameter in enumerate(parameters_to_fit):
+        frac_diff = (results.x[i] - expected[parameter]) / results.sigmas[i]
+        assert np.abs(frac_diff) < 0.01

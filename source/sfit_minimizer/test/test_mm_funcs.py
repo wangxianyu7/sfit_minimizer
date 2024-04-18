@@ -1,8 +1,11 @@
 """
 Tests for the MulensModel functions = direct comparisons to Andy's fortran sfit.
 """
+import unittest
+import copy
 import numpy as np
 import os.path
+
 import sfit_minimizer
 import MulensModel as mm
 
@@ -18,14 +21,15 @@ import MulensModel as mm
 
 mm.utils.MAG_ZEROPOINT = 18.
 data_path = os.path.join(sfit_minimizer.DATA_PATH, 'MMTest')
+SAMPLE_FILE_01 = os.path.join(data_path, 'PSPL_1_Obs_1.pho')
+SAMPLE_FILE_02 = os.path.join(data_path, 'PSPL_1_Obs_2.pho')
 
 
 def get_pspl_datafiles():
-    datafiles = ['PSPL_1_Obs_1.pho', 'PSPL_1_Obs_2.pho']
     datasets = []
-    for filename in datafiles:
+    for filename in [SAMPLE_FILE_01, SAMPLE_FILE_02]:
         data = mm.MulensData(
-            file_name=os.path.join(data_path, filename), phot_fmt='mag')
+            file_name=filename, phot_fmt='mag')
         datasets.append(data)
 
     return datasets
@@ -795,20 +799,43 @@ def test_fit_mulens_event():
         assert np.abs(frac_diff) < 0.01
 
 
-def test_estimate_fluxes():
-    # Read in the data:
-    datasets = get_pspl_datafiles()
+class TestPointLensSFitFuncion(unittest.TestCase):
 
-    # Create the model and event objects
-    model = mm.Model({'t_0': 8650., 'u_0': 0.30000, 't_E': 25.00000})
-    event = mm.Event(datasets=datasets, model=model)
-    event.fit_fluxes()
-    fluxes = event.get_ref_fluxes()
+    def setUp(self):
+        # Read in the data:
+        self.datasets = get_pspl_datafiles()
+        
+        # Create the model and event objects
+        self.model = mm.Model({'t_0': 8650., 'u_0': 0.30000, 't_E': 25.00000})
+        self.event = mm.Event(datasets=self.datasets, model=self.model)
 
-    my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
-        event, parameters_to_fit=['t_0'], estimate_fluxes=True)
-    np.testing.assert_almost_equal(
-        my_func.event.fix_source_flux[datasets[0]], fluxes[0][0])
-    np.testing.assert_almost_equal(
-        my_func.event.fix_blend_flux[datasets[0]], fluxes[1])
+    def test_estimate_fluxes(self):
+        event = copy.copy(self.event)
+        event.fit_fluxes()
+        fluxes = event.get_ref_fluxes()
 
+        # Test estimate_fluxes
+        my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
+            event, parameters_to_fit=['t_0'], estimate_fluxes=True)
+        np.testing.assert_almost_equal(
+            my_func.event.fix_source_flux[self.datasets[0]], fluxes[0][0])
+        np.testing.assert_almost_equal(
+            my_func.event.fix_blend_flux[self.datasets[0]], fluxes[1])
+
+    def test_add2450000(self):
+        datasets = []
+        for file_ in [SAMPLE_FILE_01, SAMPLE_FILE_02]:
+            datasets.append(mm.MulensData(
+                file_name=file_, phot_fmt='mag', add_2450000=True))
+
+        model = copy.copy(self.model)
+        model.parameters.parameters['t_0'] += 2450000.
+        event = mm.Event(datasets=datasets, model=model)
+
+        my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
+            event, parameters_to_fit=['t_0'], add_2450000=True)
+        assert my_func.add_2450000
+
+        my_func.update_all(theta=[9000., 1.1, 0.1, 1.1, 0.1])
+        np.testing.assert_almost_equal(
+            my_func.event.model.parameters.t_0, 2459000.)

@@ -197,7 +197,6 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
             else:
                 setattr(self.event.model.parameters, val, theta[key])
 
-
         for i, dataset in enumerate(self.event.datasets):
             if self.fs_indices[i] is not None:
                 self.event.fix_source_flux[dataset] = theta[self.fs_indices[i]]

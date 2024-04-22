@@ -18,19 +18,22 @@ class SFitResults(object):
 
     """
 
-    def __init__(self, func, success=None, msg=None, iterations=None):
+    def __init__(self, func, success=None, msg=None, iterations=None, fun=None):
         self._x = func.theta
         self._sigmas = func.get_sigmas()
         self._success = success
         self._msg = msg
         self._iter = iterations
+        self._fun = fun
 
     def __repr__(self):
-        output_str = 'x = {0}\n'.format(self.x)
+        output_str = 'fun = {0}\n'.format(self.fun)
         output_str += 'sigmas = {0}\n'.format(self.sigmas)
+        output_str += 'message = {0}\n'.format(self.msg)
+        output_str += 'nit = {0}\n'.format(self.nit)
         output_str += 'success = {0}\n'.format(self.success)
-        output_str += 'msg = {0}\n'.format(self.msg)
-        output_str += 'iter = {0}'.format(self.iterations)
+        output_str += 'x = {0}\n'.format(self.x)
+
         return output_str
 
     @property
@@ -41,6 +44,15 @@ class SFitResults(object):
     @x.setter
     def x(self, value):
         self._x = value
+
+    @property
+    def fun(self):
+        """ final function evaluation, e.g., chi2"""
+        return self._fun
+
+    @fun.setter
+    def fun(self, value):
+        self._fun = value
 
     @property
     def sigmas(self):
@@ -72,12 +84,12 @@ class SFitResults(object):
         self._msg = value
 
     @property
-    def iterations(self):
+    def nit(self):
         """ Total number of iterations executed."""
         return self._iter
 
-    @iterations.setter
-    def iterations(self, value):
+    @nit.setter
+    def nit(self, value):
         self._iter = value
 
 

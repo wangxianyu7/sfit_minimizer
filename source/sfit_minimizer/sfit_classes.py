@@ -336,8 +336,8 @@ class SFitFunction(object):
                 raise ValueError(
                     'df should have the shape (M, N) where M is the number of' +
                     'parameters and N is the number of data' +
-                    ' points. len(theta): ' +
-                    '{2}, data.shape: {0}, df.shape: {1}'.format(
+                    ' points. M=len(theta): ' +
+                    '{2}, N=data.shape: {0}, df.shape: {1}'.format(
                         self.data.shape, value.shape, len(self.theta)))
         else:
             raise TypeError(

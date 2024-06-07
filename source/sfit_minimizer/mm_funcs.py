@@ -28,6 +28,12 @@ def fit_mulens_event(
     my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
         event, parameters_to_fit)
 
+    if verbose:
+        print(event)
+        print('fixed fs', event.fix_source_flux)
+        print('fixed fb', event.fix_blend_flux)
+        print('Initial guess', initial_guess)
+
     # Do the fit
     result = sfit_minimizer.minimize(
         my_func, x0=initial_guess, tol=1e-5,

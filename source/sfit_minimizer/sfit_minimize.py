@@ -122,8 +122,9 @@ def minimize(
 
     sfit_obj.update_all(x_new)
     if i < max_iter - 1:
-        return SFitResults(sfit_obj, success=True, iterations=i)
+        return SFitResults(
+            sfit_obj, success=True, iterations=i, fun=sfit_obj.chi2)
     else:
         return SFitResults(
-            sfit_obj, success=False,
+            sfit_obj, success=False, fun=old_chi2,
             msg='max iterations exceeded: {0}'.format(max_iter), iterations=i)

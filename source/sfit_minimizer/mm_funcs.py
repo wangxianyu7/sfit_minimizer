@@ -5,7 +5,7 @@ import sfit_minimizer
 
 def fit_mulens_event(
         event, parameters_to_fit=None, initial_guess=None, plot=False,
-        verbose=False):
+        tol=1e-5, verbose=False):
     # Setup the fitting
     if parameters_to_fit is None:
         parameters_to_fit = event.model.parameters.parameters.keys()
@@ -36,7 +36,7 @@ def fit_mulens_event(
 
     # Do the fit
     result = sfit_minimizer.minimize(
-        my_func, x0=initial_guess, tol=1e-5,
+        my_func, x0=initial_guess, tol=tol,
         options={'step': 'adaptive'}, verbose=verbose)
 
     values = result.x

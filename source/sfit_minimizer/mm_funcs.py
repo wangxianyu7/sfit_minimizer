@@ -3,27 +3,34 @@ import matplotlib.pyplot as plt
 import sfit_minimizer
 
 
+def _set_initial_guess(event, parameters_to_fit):
+    initial_guess = []
+    for key in parameters_to_fit:
+        if key == 't_E':
+            initial_guess.append(event.model.parameters.parameters[key].value)
+        else:
+            initial_guess.append(event.model.parameters.parameters[key])
+
+    event.fit_fluxes()
+    source_fluxes = event.source_fluxes
+    blend_fluxes = event.blend_fluxes
+    for i in range(len(event.datasets)):
+        initial_guess.append(source_fluxes[i][0])
+        initial_guess.append(blend_fluxes[i])
+
+    return initial_guess
+
+
 def fit_mulens_event(
         event, parameters_to_fit=None, initial_guess=None, plot=False,
         tol=1e-5, verbose=False):
+
     # Setup the fitting
     if parameters_to_fit is None:
         parameters_to_fit = event.model.parameters.parameters.keys()
 
     if initial_guess is None:
-        initial_guess = []
-        for key in parameters_to_fit:
-            if key == 't_E':
-                initial_guess.append(event.model.parameters.parameters[key].value)
-            else:
-                initial_guess.append(event.model.parameters.parameters[key])
-
-        event.fit_fluxes()
-        source_fluxes = event.source_fluxes
-        blend_fluxes = event.blend_fluxes
-        for i in range(len(event.datasets)):
-            initial_guess.append(source_fluxes[i][0])
-            initial_guess.append(blend_fluxes[i])
+        initial_guess = _set_initial_guess(event, parameters_to_fit)
 
     my_func = sfit_minimizer.mm_funcs.PointLensSFitFunction(
         event, parameters_to_fit)

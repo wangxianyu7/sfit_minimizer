@@ -839,3 +839,15 @@ class TestPointLensSFitFuncion(unittest.TestCase):
         my_func.update_all(theta=[9000., 1.1, 0.1, 1.1, 0.1])
         np.testing.assert_almost_equal(
             my_func.event.model.parameters.t_0, 2459000.)
+
+
+class TestInitialGuess(unittest.TestCase):
+
+    def test_1L1S(self):
+        pass
+
+    def test_1L1S_fbzero(self):
+        pass
+
+    def test_1L2S(self):
+        pass

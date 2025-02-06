@@ -6,10 +6,7 @@ import sfit_minimizer
 def _set_initial_guess(event, parameters_to_fit):
     initial_guess = []
     for key in parameters_to_fit:
-        if key == 't_E':
-            initial_guess.append(event.model.parameters.parameters[key].value)
-        else:
-            initial_guess.append(event.model.parameters.parameters[key])
+        initial_guess.append(event.model.parameters.parameters[key])
 
     event.fit_fluxes()
     source_fluxes = event.source_fluxes

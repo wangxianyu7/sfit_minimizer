@@ -21,6 +21,38 @@ def _set_initial_guess(event, parameters_to_fit):
 def fit_mulens_event(
         event, parameters_to_fit=None, initial_guess=None, plot=False,
         tol=1e-5, verbose=False):
+    """
+    Basic function for fitting a point-lens microlensing model to data.
+
+    Arguments:
+        event: *MulensModel.Event()* object
+            event contains datasets and an initial model.
+
+        parameters_to_fit: *list* of *str*, optional
+            List of names of point-lens parameters to fit, e.g.
+            ['t_0', 'u_0', 't_E', 'rho']. If not given, will
+            fit for all parameters of *event.model*.
+
+        initial_guess: *list*, *np.ndarray*, optional
+            Starting values for the parameters to be fitted. Must include
+            values for the flux parameters. If not included, will be set to
+            the values of the parameters in *event.model* and the initial
+            values of the fluxes will be set with *event.fit_fluxes()*.
+
+        plot: *bool*, optional
+            After the fitting is complete, plot the best-fitting model with
+            the data.
+
+        tol: *float*
+            See :py:attr:`sfit_minimize.minimize()`.
+
+        verbose: *bool*
+            See :py:attr:`sfit_minimize.minimize()`.
+
+    Returns:
+        :py:class:`sfit_minimizer.sfit_classes.SFitResults` object.
+
+    """
 
     # Setup the fitting
     if parameters_to_fit is None:
@@ -86,6 +118,20 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
             list of the named model parameters to be fit. (Not including the
             fluxes.)
 
+        estimate_fluxes: *bool*
+            If set, will use *event.fit_fluxes()* to generate initial values
+            for the flux parameters for each data set. Otherwise, will initialize
+            the fitting with fixed values from *event.fix_source_flux* and
+            *event.fix_blend_flux* or if they are not set for a particular dataset,
+            will use source_flux = 1. and blend_flux = 0.
+
+        add_2450000: *bool*
+            see :py:attr:`add_2450000`
+
+    Attributes:
+        n_params = *int*
+            Number of parameters to fit. Includes flux parameters.
+
     Notes:
         1. if you want to fix the source or blend flux for a particular dataset,
     use the *fix_source_flux* or *fix_blend_flux* keywords in *event* as usual.
@@ -123,10 +169,20 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         return self._add_2450000
 
     def flatten_data(self):
+        """
+        Concatenates good points for all datasets into a single array with
+        columns: Date, flux, err.
+        """
         flattened_data = self._flatten_data()
         sfit_minimizer.SFitFunction.__init__(self, data=flattened_data)
 
     def set_flux_indices(self):
+        """
+        Count the total number of parameters of the model, *n_params*, and
+        sets makes list of indices to match the flux parameters to the correct
+        columns in the b, c, and d matrices after accounting for fixed flux
+        parameters.
+        """
         # must be carried out before initialize_fluxes()
         self.fs_indices = []
         self.fb_indices = []
@@ -217,6 +273,9 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
         self.event.fit_fluxes(bad=False)
 
     def update_all(self, theta=None, verbose=False):
+        """
+        See :py:func:`sfit_minimizer.sfit_classes.update_all()`.
+        """
         if theta is None:
             raise ValueError('theta must be passed to update_all()')
 

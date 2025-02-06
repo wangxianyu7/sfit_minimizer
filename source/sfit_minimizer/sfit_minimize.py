@@ -1,5 +1,6 @@
 from sfit_minimizer.sfit_classes import SFitResults
 import time
+import numpy as np
 
 
 def set_initial_step_size(options):
@@ -20,23 +21,22 @@ def set_initial_step_size(options):
             iteration of the :py:func:`~minimize` routine.
     """
     default = 0.1
-
-    if options is None:
+    if (options is None) or not ('step' in options.keys()):
         options = {'step': default}
 
-    if 'step' in options.keys():
-        if isinstance(options['step'], (str)):
-            if options['step'].lower() == 'adaptive':
-                fac = 0.01
-            else:
-                raise ValueError(
-                    'Invalid option for "step": {0}'.format(options['step']))
-
+    if isinstance(options['step'], (str)):
+        if options['step'].lower() == 'adaptive':
+            fac = 0.01
         else:
-            fac = options['step']
-
-    else:
+            raise ValueError(
+                'Invalid option for "step": {0}'.format(options['step']))
+    elif options['step'] is None:
         fac = default
+    elif np.isfinite(options['step']):
+        fac = options['step']
+    else:
+        raise ValueError(
+            'Invalid option for "step": {0}'.format(options['step']))
 
     return (fac, options)
 

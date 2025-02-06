@@ -128,3 +128,28 @@ class TestMinimize(unittest.TestCase):
             self.my_func, x0=self.initial_guess, tol=1e-7,
             options={'step': 0.01}, max_iter=10000, verbose=False)
         self._evaluate_test(result)
+
+    def test_minimize_excceeds_max_iter(self):
+        result = sfit_minimizer.minimize(
+            self.my_func, x0=self.initial_guess, tol=1e-7,
+            options={'step': 0.01}, max_iter=100, verbose=False)
+        assert result.success == False
+        assert result.msg[0:3] == 'max'
+
+    def test_minimize_none_step(self):
+        result = sfit_minimizer.minimize(
+            self.my_func, x0=self.initial_guess, tol=1e-7,
+            options={'step': None}, max_iter=10000, verbose=False)
+        self._evaluate_test(result)
+
+    def test_minimize_value_error_1(self):
+        with self.assertRaises(ValueError):
+            result = sfit_minimizer.minimize(
+                self.my_func, x0=self.initial_guess, tol=1e-7,
+                options={'step': 'banana'}, max_iter=10000, verbose=False)
+
+    def test_minimize_value_error_2(self):
+        with self.assertRaises(ValueError):
+            result = sfit_minimizer.minimize(
+                self.my_func, x0=self.initial_guess, tol=1e-7,
+                options={'step': np.nan}, max_iter=10000, verbose=False)

@@ -30,7 +30,7 @@ def fit_mulens_event(
 
         parameters_to_fit: *list* of *str*, optional
             List of names of point-lens parameters to fit, e.g.
-            ['t_0', 'u_0', 't_E', 'rho']. If not given, will
+            `['t_0', 'u_0', 't_E', 'rho']`. If not given, will
             fit for all parameters of *event.model*.
 
         initial_guess: *list*, *np.ndarray*, optional
@@ -44,10 +44,10 @@ def fit_mulens_event(
             the data.
 
         tol: *float*
-            See :py:attr:`sfit_minimize.minimize()`.
+            See :py:func:`sfit_minimizer.sfit_minimize.minimize()`.
 
         verbose: *bool*
-            See :py:attr:`sfit_minimize.minimize()`.
+            See :py:func:`sfit_minimizer.sfit_minimize.minimize()`.
 
     Returns:
         :py:class:`sfit_minimizer.sfit_classes.SFitResults` object.
@@ -274,7 +274,7 @@ class PointLensSFitFunction(sfit_minimizer.SFitFunction):
 
     def update_all(self, theta=None, verbose=False):
         """
-        See :py:func:`sfit_minimizer.sfit_classes.update_all()`.
+        See :py:func:`sfit_minimizer.sfit_classes.SFitFunction.update_all()`.
         """
         if theta is None:
             raise ValueError('theta must be passed to update_all()')

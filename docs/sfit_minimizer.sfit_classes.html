@@ -318,14 +318,12 @@ function. See <a class="reference internal" href="#sfit_minimizer.sfit_classes.S
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bmat</span></span><a class="headerlink" href="#sfit_minimizer.sfit_classes.SFitFunction.bmat" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>np.array</em> of shape (M, M)</p>
 <p>b matrix from sfit. invert to find c matrix (<a class="reference internal" href="#sfit_minimizer.sfit_classes.SFitFunction.cmat" title="sfit_minimizer.sfit_classes.SFitFunction.cmat"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cmat</span></code></a>) used for
-stepping and finding sigmas:</p>
+stepping and finding sigmas:’</p>
 <blockquote>
 <div><p>b_ij
-= Sum_k (</p>
-<blockquote>
-<div><p>(partial F / partial theta_i)(partial F/partial theta_j) /
+= Sum_k (
+(partial F / partial theta_i)(partial F/partial theta_j) /
 data[k, 2]^2 )</p>
-</div></blockquote>
 </div></blockquote>
 <p>where F is the <em>fitting function</em> and data[k, 2] are the errors.
 shape = ( len(theta), len(theta) ).</p>

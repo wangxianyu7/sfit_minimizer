@@ -501,11 +501,12 @@ class SFitFunction(object):
         *np.array* of shape (M, M)
 
         b matrix from sfit. invert to find c matrix (:py:attr:`~cmat`) used for
-        stepping and finding sigmas:
+        stepping and finding sigmas:'
+
             b_ij
             = Sum_k (
-              (partial F / partial theta_i)(partial F/partial theta_j) /
-              data[k, 2]^2 )
+            (partial F / partial theta_i)(partial F/partial theta_j) /
+            data[k, 2]^2 )
 
         where F is the *fitting function* and data[k, 2] are the errors.
         shape = ( len(theta), len(theta) ).

@@ -2,6 +2,8 @@
 Assuming a linear function of the form "f = a0 + a1 * x + a2 * x^2 ...", check
 that the minimizer works as expected.
 """
+import unittest
+
 import numpy as np
 import os.path
 import sfit_minimizer
@@ -95,14 +97,34 @@ def test_fit():
 
 
 # Test that the minimize function produces the expected results
-def test_minimize():
-    data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'), skiprows=2)
-    initial_guess = [4, 2.1]  # Wrong initial condition
-    my_func = LinearFunction(data=data)
+class TestMinimize(unittest.TestCase):
 
-    result = sfit_minimizer.minimize(
-        my_func, x0=initial_guess, tol=1e-7,
-        options={'step': 'adaptive'}, verbose=False)
+    def setUp(self):
+        self.data = np.loadtxt(os.path.join(sfit_minimizer.DATA_PATH, 'PolynomialTest', 'test_data_10000pts_Poisson.txt'),
+                          skiprows=2)
+        self.initial_guess = [4, 2.1]  # Wrong initial condition
+        self.my_func = LinearFunction(data=self.data)
 
-    my_func.theta = result.x
-    np.testing.assert_almost_equal(my_func.get_chi2(), 10865.52999, decimal=3)
+    def _evaluate_test(self, result):
+        self.my_func.theta = result.x
+        np.testing.assert_almost_equal(self.my_func.get_chi2(), 10865.52999, decimal=3)
+        print(result)
+
+    def test_minimize(self):
+        result = sfit_minimizer.minimize(
+            self.my_func, x0=self.initial_guess, tol=1e-7,
+            options={'step': 'adaptive'}, verbose=False)
+        self._evaluate_test(result)
+
+    def test_minimize_no_options(self):
+        result = sfit_minimizer.minimize(
+            self.my_func, x0=self.initial_guess, tol=1e-7,
+            verbose=False)
+
+        self._evaluate_test(result)
+
+    def test_minimize_fixed_step(self):
+        result = sfit_minimizer.minimize(
+            self.my_func, x0=self.initial_guess, tol=1e-7,
+            options={'step': 0.01}, max_iter=10000, verbose=False)
+        self._evaluate_test(result)

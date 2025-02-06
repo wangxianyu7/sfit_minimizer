@@ -1,0 +1,24 @@
+Delta chi2 limit:  1.0
+BFGS
+True Positives:  1259  73  # purple points at x=0 show not a subset
+False Positives:    5   0  # checking the 5 false positives
+True Negatives:    23   1
+False Negatives:  429  25
+
+Nelder-Mead
+True Positives:  1456  85
+False Positives:   30   2
+True Negatives:    17   1
+False Negatives:  213  12
+
+Newton-CG
+True Positives:   829  48
+False Positives:  475  28
+True Negatives:    76   4
+False Negatives:  336  20
+
+SFit
+True Positives:  1407  82
+False Positives:   11   1
+True Negatives:   291  17
+False Negatives:    7   0

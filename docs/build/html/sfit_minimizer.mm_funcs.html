@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>sfit_minimizer.mm_funcs module &#8212; SFit Minimizer 0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-sfit_minimizer.mm_funcs">
+<span id="sfit-minimizer-mm-funcs-module"></span><h1>sfit_minimizer.mm_funcs module<a class="headerlink" href="#module-sfit_minimizer.mm_funcs" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="sfit_minimizer.mm_funcs.PSPLFunction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">sfit_minimizer.mm_funcs.</span></span><span class="sig-name descname"><span class="pre">PSPLFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters_to_fit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimate_fluxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.mm_funcs.PSPLFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sfit_minimizer.sfit_classes.html#sfit_minimizer.sfit_classes.SFitFunction" title="sfit_minimizer.sfit_classes.SFitFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">sfit_minimizer.sfit_classes.SFitFunction</span></code></a></p>
+<p>A class for fitting a point-source point-lens microlensing light curve to
+observed data using <a class="reference internal" href="sfit_minimizer.sfit_minimize.html#sfit_minimizer.sfit_minimize.minimize" title="sfit_minimizer.sfit_minimize.minimize"><code class="xref py py-func docutils literal notranslate"><span class="pre">sfit_minimizer.sfit_minimize.minimize()</span></code></a>.
+Simultaneously fits microlensing parameters and source and blend fluxes for
+each dataset.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>event: <em>MulensModel.Event()</em> object</dt><dd><p>event contains datasets and an initial model.</p>
+</dd>
+<dt>parameters_to_fit: <em>list</em> of <em>str</em></dt><dd><p>list of the named model parameters to be fit. (Not including the
+fluxes.)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Note: if you want to fix the source or blend flux for a particular dataset,
+use the <em>fix_source_flux</em> or <em>fix_blend_flux</em> keywords in <em>event</em> as usual.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.mm_funcs.PSPLFunction.flatten_data">
+<span class="sig-name descname"><span class="pre">flatten_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.mm_funcs.PSPLFunction.flatten_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate good points for all datasets into a single array with
+columns: Date, flux, err.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.mm_funcs.PSPLFunction.update_all">
+<span class="sig-name descname"><span class="pre">update_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.mm_funcs.PSPLFunction.update_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recalculate all of the data properties with respect to the new model
+parameters.</p>
+<dl class="simple">
+<dt>Keywords:</dt><dd><dl class="simple">
+<dt>theta0: <em>list</em> of length M, optional</dt><dd><p>new trial values for the parameters of the function to be fit.
+If not provided, recalculate using the current value of theta.</p>
+</dd>
+<dt>verbose: <em>bool</em>, optional</dt><dd><p>Default is False. If True, prints output after each stage for
+debugging.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.mm_funcs.PSPLFunction.calc_residuals">
+<span class="sig-name descname"><span class="pre">calc_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.mm_funcs.PSPLFunction.calc_residuals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate expected values of the residuals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sfit_minimizer.mm_funcs.PSPLFunction.calc_df">
+<span class="sig-name descname"><span class="pre">calc_df</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sfit_minimizer.mm_funcs.PSPLFunction.calc_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the derivatives of the fitting function and store as
+self.df.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SFit Minimizer</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Jennifer Yee.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/sfit_minimizer.mm_funcs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

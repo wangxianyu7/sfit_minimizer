@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoTestManager">
+    <enabled-run-configurations>
+      <run-configuration type="tests" name="Unittests in test" />
+    </enabled-run-configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f0429742-6ead-4ea5-926b-d64f8b98cb55" name="Changes" comment="Add jekyll theme to documentation." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/data/MMTest/Matrices/PSPL_1_0.1/fort.51" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/data/MMTest/Matrices/FSPL_1_0.01/fort.51" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/sandbox/plot_fort62.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/source/sfit_minimizer/mm_funcs.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/source/sfit_minimizer/sfit_minimize.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/source/sfit_minimizer/sfit_classes.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/sandbox/gen_ulens_data.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/source/sfit_minimizer/test/test_mm_funcs.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/data/MMTest/PSPL_1_Obs_1.pho" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="22Yae1EqLEmcuw7pSonpMZJ2Hy5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/examples" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/examples" />
+      <recent name="$PROJECT_DIR$/data/MMTest" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/sandbox" />
+      <recent name="$PROJECT_DIR$/data/MMTest/Matrices/PSPL_par_0.01" />
+      <recent name="$PROJECT_DIR$/data/PolynomialTest" />
+      <recent name="$PROJECT_DIR$/documents" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.eval_results">
+    <configuration name="eval_results" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sfit_minimizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/paper/figs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/paper/figs/eval_results.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="make_plots" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sfit_minimizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/paper/figs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/paper/figs/make_plots.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="reformat_results" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sfit_minimizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/paper/figs" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/paper/figs/reformat_results.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_fit" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="sfit_minimizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/sandbox/performance_tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/sandbox/performance_tests/test_fit.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests in test" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="sfit_minimizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/source/sfit_minimizer/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/source/sfit_minimizer/test&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.eval_results" />
+        <item itemvalue="Python.reformat_results" />
+        <item itemvalue="Python.make_plots" />
+        <item itemvalue="Python tests.Unittests in test" />
+        <item itemvalue="Python.test_fit" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f0429742-6ead-4ea5-926b-d64f8b98cb55" name="Changes" comment="" />
+      <created>1640017067734</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640017067734</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Added unit test for parallax (does not pass).">
+      <created>1644863799840</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1644863799840</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Cleaned up some errors relating to bad data. Added a note to add a unit test for this.">
+      <created>1645028903443</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1645028903443</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Added an option to estimate initial values for the fluxes from a linear fit.">
+      <created>1645628221082</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1645628221082</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Changed parallax unit test to be year 2000. Only tests final results.">
+      <created>1645631211443</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1645631211443</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Updated version #. Cleaned up PEP8.">
+      <created>1645631399315</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1645631399316</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Added new unit test for fixed blending. Does not pass yet.">
+      <created>1645731335853</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1645731335853</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fixed blend flux tests pass.">
+      <created>1646840592554</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1646840592556</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Cleaned up comments and PEP8.">
+      <created>1646840961145</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1646840961145</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Added tests for fixed source flux. They pass.">
+      <created>1646841882634</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1646841882634</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Added tests for fixed source and blend flux for Obs1. They pass.">
+      <created>1646843027447</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1646843027448</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Fixed bug to set step size if keyword options is not used.">
+      <created>1646843377488</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1646843377488</updated>
+    </task>
+    <task id="LOCAL-00038" summary="made reset_all public.">
+      <created>1647873397095</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1647873397095</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Made a private function for _update_ulens_params() and refactored relevant code.">
+      <created>1649861705775</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1649861705775</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Made a private function for _update_ulens_params() and refactored relevant code.">
+      <created>1649861851498</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1649861851498</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fixed some bugs with _update_ulens_params.">
+      <created>1650413975091</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1650413975091</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Refactored calc_df() so it is simpler, shorter, and works in edge cases. Unit tests pass.">
+      <created>1650586474699</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1650586474699</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Added limb-darkening coefficients. Failure is less bad than before.">
+      <created>1651090049968</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1651090049968</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Updated tests to use assert_allclose() instead of assert_almost_equal()">
+      <created>1651167269944</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1651167269944</updated>
+    </task>
+    <task id="LOCAL-00045" summary="FSPL Unit tests fail in a new place.">
+      <created>1651264182208</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1651264182208</updated>
+    </task>
+    <task id="LOCAL-00046" summary="FSPL Unit tests pass">
+      <created>1652280804670</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1652280804670</updated>
+    </task>
+    <task id="LOCAL-00047" summary="FSPL gradient seems to work, but it is very, very slow.">
+      <created>1652282379483</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1652282379483</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Sped up FSPL gradient by accessing data_magnification rather than calculating it.">
+      <created>1652386807460</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1652386807460</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Made adjustments so Ex 02 looks nice. Adding unit test files to repository.">
+      <created>1652388253068</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1652388253068</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Tests pass, Ex02 works as expected.">
+      <created>1652722073289</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1652722073289</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Cleaned up examples and added commets.">
+      <created>1653326474992</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1653326474992</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Updated Sphinx">
+      <created>1653326715614</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1653326715614</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Added a README.">
+      <created>1653326776060</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1653326776060</updated>
+    </task>
+    <task id="LOCAL-00054" summary="PSPL--&gt;PointLens, Cleaned up documentation, PEP8 stuff.">
+      <created>1653327799813</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1653327799813</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Fixed a bug in the error message for calc_df() (previously said calc_model())">
+      <created>1657562735786</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1657562735787</updated>
+    </task>
+    <task id="LOCAL-00056" summary="theta0--&gt;theta">
+      <created>1660239539731</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1660239539732</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Some minor updates">
+      <created>1711458477446</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1711458477446</updated>
+    </task>
+    <task id="LOCAL-00058" summary="created a method to minimize fit inputs.">
+      <created>1711458680491</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1711458680491</updated>
+    </task>
+    <task id="LOCAL-00059" summary="fixed name convention.">
+      <created>1711460421336</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1711460421336</updated>
+    </task>
+    <task id="LOCAL-00060" summary="fixed bug: get_d_A_d_params already filters for good data only.">
+      <created>1711461055331</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1711461055331</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Fixed some initialization problems. Made some private functions public.">
+      <created>1712065547244</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1712065547244</updated>
+    </task>
+    <task id="LOCAL-00062" summary="added data_len to init.">
+      <created>1712068655312</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1712068655312</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Added unit test for fit_mulens_event">
+      <created>1713374494015</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1713374494016</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Added unit test for estimate fluxes.">
+      <created>1713399849126</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1713399849127</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Added unit test for add_245000 keyword.">
+      <created>1713469031628</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1713469031628</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Added verbose and updated an error message.">
+      <created>1717787486850</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1717787486850</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Popped out set_initial_guess as a separate function.">
+      <created>1738600653676</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1738600653676</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Removed &quot;value&quot; from setting t_E to match MMv3.">
+      <created>1738842456187</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1738842456187</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Improved coverage of set_initial_step_size.">
+      <created>1738848759027</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1738848759027</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Tidied up the code.">
+      <created>1738849694788</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1738849694788</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Improved documentation.">
+      <created>1738849821820</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1738849821820</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Added documentation.">
+      <created>1738851188993</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1738851188993</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Updated documentation and ran Sphinx.">
+      <created>1738852037267</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1738852037267</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Adding the Sphinx HMTL files to git!">
+      <created>1738853261824</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853261824</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Add jekyll theme to documentation.">
+      <created>1738854363817</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1738854363817</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Cleaned up examples and added commets." />
+    <MESSAGE value="Updated Sphinx" />
+    <MESSAGE value="Added a README." />
+    <MESSAGE value="PSPL--&gt;PointLens, Cleaned up documentation, PEP8 stuff." />
+    <MESSAGE value="Fixed a bug in the error message for calc_df() (previously said calc_model())" />
+    <MESSAGE value="theta0--&gt;theta" />
+    <MESSAGE value="Some minor updates" />
+    <MESSAGE value="created a method to minimize fit inputs." />
+    <MESSAGE value="fixed name convention." />
+    <MESSAGE value="fixed bug: get_d_A_d_params already filters for good data only." />
+    <MESSAGE value="Fixed some initialization problems. Made some private functions public." />
+    <MESSAGE value="added data_len to init." />
+    <MESSAGE value="Added unit test for fit_mulens_event" />
+    <MESSAGE value="Added unit test for estimate fluxes." />
+    <MESSAGE value="Added unit test for add_245000 keyword." />
+    <MESSAGE value="Added verbose and updated an error message." />
+    <MESSAGE value="Popped out set_initial_guess as a separate function." />
+    <MESSAGE value="Removed &quot;value&quot; from setting t_E to match MMv3." />
+    <MESSAGE value="Improved coverage of set_initial_step_size." />
+    <MESSAGE value="Tidied up the code." />
+    <MESSAGE value="Improved documentation." />
+    <MESSAGE value="Added documentation." />
+    <MESSAGE value="Updated documentation and ran Sphinx." />
+    <MESSAGE value="Adding the Sphinx HMTL files to git!" />
+    <MESSAGE value="Add jekyll theme to documentation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add jekyll theme to documentation." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/source/sfit_minimizer/sfit_minimize.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/examples/example_01_pspl_fit.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

@@ -68,7 +68,7 @@ def minimize(
             Maximum number of iterations.
 
         verbose: *bool*
-            True = print mores stuff than usual.
+            True = print results of each iteration to the screen.
 
     Returns:
         :py:class:`sfit_minimizer.sfit_classes.SFitResults` object.

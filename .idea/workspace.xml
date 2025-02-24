@@ -6,8 +6,18 @@
     </enabled-run-configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f0429742-6ead-4ea5-926b-d64f8b98cb55" name="Changes" comment="Fixed bmat indentation issue.">
+    <list default="true" id="f0429742-6ead-4ea5-926b-d64f8b98cb55" name="Changes" comment="Update README with link to paper.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.doctrees/environment.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/.doctrees/index.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/docs/.doctrees/index.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/_sources/index.rst.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_sources/index.rst.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/genindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/genindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/objects.inv" beforeDir="false" afterPath="$PROJECT_DIR$/docs/objects.inv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/py-modindex.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/py-modindex.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/searchindex.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/searchindex.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,20 +201,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1640017067734</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Added an option to estimate initial values for the fluxes from a linear fit.">
-      <created>1645628221082</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1645628221082</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Changed parallax unit test to be year 2000. Only tests final results.">
-      <created>1645631211443</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1645631211443</updated>
     </task>
     <task id="LOCAL-00031" summary="Updated version #. Cleaned up PEP8.">
       <created>1645631399315</created>
@@ -535,7 +531,21 @@
       <option name="project" value="LOCAL" />
       <updated>1738856111574</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="Remove unnecessary stuff from git repo.">
+      <created>1740407499899</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1740407499899</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Update README with link to paper.">
+      <created>1740407512613</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1740407512614</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -550,8 +560,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated Sphinx" />
-    <MESSAGE value="Added a README." />
     <MESSAGE value="PSPL--&gt;PointLens, Cleaned up documentation, PEP8 stuff." />
     <MESSAGE value="Fixed a bug in the error message for calc_df() (previously said calc_model())" />
     <MESSAGE value="theta0--&gt;theta" />
@@ -575,7 +583,9 @@
     <MESSAGE value="Adding the Sphinx HMTL files to git!" />
     <MESSAGE value="Add jekyll theme to documentation." />
     <MESSAGE value="Fixed bmat indentation issue." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed bmat indentation issue." />
+    <MESSAGE value="Remove unnecessary stuff from git repo." />
+    <MESSAGE value="Update README with link to paper." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update README with link to paper." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

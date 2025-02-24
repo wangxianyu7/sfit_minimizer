@@ -15,7 +15,7 @@ https://jenniferyee.github.io/sfit_minimizer/)
 ## Acknowledgements
 
 If you are using sfit_minimizer for scientific research: please cite 
-[the future arxiv paper](https://arxiv.org)
+[Yee & Gould 2025](https://arxiv.org/abs/2502.04486)
 
 ## Examples
 

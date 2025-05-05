@@ -5,4 +5,5 @@ setup(
     version='1.0.2',
     packages=find_packages(where='source'),
     package_dir={'': 'source'},
+    install_requires=[],
 )

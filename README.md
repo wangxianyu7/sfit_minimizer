@@ -23,4 +23,7 @@ Please see the "examples" folder.
 
 ## How to install?
 
-Clone this repository.
+
+```Python
+pip install git+https://github.com/wangxianyu7/sfit_minimizer.git
+```

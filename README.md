@@ -25,5 +25,5 @@ Please see the "examples" folder.
 
 
 ```Python
-pip install git+https://github.com/wangxianyu7/sfit_minimizer.git
+pip install git+https://github.com/jenniferyee/sfit_minimizer.git
 ```
